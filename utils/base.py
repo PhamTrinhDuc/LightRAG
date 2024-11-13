@@ -1,24 +1,66 @@
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TypedDict, Union, Literal, Generic, TypeVar
+from utils.utilities import EmbeddingFunc
 
-
-@dataclass 
-class EmbeddingFunc:
+TextChunkSchema = TypedDict(
+    "TextChunkSchema", 
+    {
+        "tokens": int,
+        "content": str,
+        "full_doc_id": str,
+        "chunk_order_index": int
+    }
+)
+T = TypeVar("T")
+    
+@dataclass
+class StorageNameSpace:
     """
-    Lớp EmbeddingFunc đại diện cho một hàm nhúng (embedding function).
+    StorageNameSpace là một lớp đại diện cho không gian lưu trữ với các cấu hình toàn cục.
     Attributes:
-        embedding_dim (int): Kích thước của vector nhúng.
-        max_token (int): Số lượng token tối đa.
-        func (callable): Hàm nhúng được sử dụng để tính toán vector nhúng.
+        namespace (str): Tên không gian lưu trữ.
+        global_config (dict): Cấu hình toàn cục cho không gian lưu trữ.
     Methods:
-        __call__(*args, **kwargs) -> np.ndarray:
-            Thực thi hàm nhúng với các tham số đầu vào và trả về một mảng numpy.
+        index_done_callback(): Hàm bất đồng bộ được gọi sau khi hoàn tất việc lập chỉ mục.
+        query_done_callback(): Hàm bất đồng bộ được gọi sau khi hoàn tất việc truy vấn.
     """
+    
+    namespace: str
+    global_config: dict
 
-    embedding_dim: int
-    max_token: int
-    func: callable
+    async def index_done_callback(self):
+        "commit the storage operations after indexing"
+        pass
 
-    async def __call__(self, *args, **kawrgs) -> np.ndarray:
-        return await self.func(*args, **kawrgs)
+    async def query_done_callback(self):
+        "commit the storage operations after querying"
+        pass
+
+
+@dataclass
+class BaseVectorStorage(StorageNameSpace):
+    embedding_func: EmbeddingFunc
+    meta_fields: set = field(default_factory=set)
+
+    async def query(self, query: str, top_k: int) -> list[dict]:
+        raise NotImplementedError
+    
+    async def upsert(self, data: dict[str, dict]):
+        """Use 'content' field from value for embedding, use key as id.
+        If embedding_func is None, use 'embedding' field from value
+        """
+        raise NotImplementedError
+    
+@dataclass 
+class BaseKVStorage(Generic[T], StorageNameSpace):
+    embedding_func: EmbeddingFunc
+
+    async def all_keys(self) -> list[str]:
+        raise NotImplementedError
+    
+    async def get_by_id(self, id: str) -> Union[T, None]:
+        raise NotImplementedError
+    
+    async def upsert(self, data: dict[str, T]):
+        raise NotImplementedError
