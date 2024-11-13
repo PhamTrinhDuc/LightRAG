@@ -37,7 +37,6 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
     wait=wait_exponential(multiplier=1, min=2, max=10), # thời gian chờ giữa các lần thửtăng theo cấp số nhân
     retry=retry_if_exception_type(RateLimitError, APIConnectionError, Timeout) # thử lại nếu gặp lỗi RateLimitError, APIConnectionError, Timeout
 )
-
 async def openai_complete_if_cache(
     model,
     prompt,
