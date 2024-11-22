@@ -64,3 +64,6 @@ class BaseKVStorage(Generic[T], StorageNameSpace):
     
     async def upsert(self, data: dict[str, T]):
         raise NotImplementedError
+
+class BaseGraphStorage(StorageNameSpace):
+    pass

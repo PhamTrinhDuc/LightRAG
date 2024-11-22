@@ -39,7 +39,7 @@ def load_json(file_name):
     with open(file=file_name, encoding="utf-8", mode='r') as f:
         return json.load(f)
 
-def save_json(json_obj, file_name: str):
+def write_json(json_obj, file_name: str):
     with open(file=file_name, encoding="utf-8", mode='w') as f:
         json.dump(json_obj, f, ensure_ascii=False, indent=4)
 
