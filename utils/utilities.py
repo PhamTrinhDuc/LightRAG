@@ -33,6 +33,16 @@ def set_logger(log_file: str):
     if not logger.handlers:
         logger.addHandler(file_handler)
 
+def load_json(file_name):
+    if not os.path.exists(file_name):
+        return {}
+    with open(file=file_name, encoding="utf-8", mode='r') as f:
+        return json.load(f)
+
+def save_json(json_obj, file_name: str):
+    with open(file=file_name, encoding="utf-8", mode='w') as f:
+        json.dump(json_obj, f, ensure_ascii=False, indent=4)
+
 
 def compute_args_has(*args):
     """
@@ -48,6 +58,18 @@ def compute_args_has(*args):
     print(hash1)  # Output: '5d41402abc4b2a76b9719d911017c592'
     '''
     return md5(str(args).encode()).hexdigest()
+
+
+def compute_mdhash_id(content, prefix: str = ""):
+    """
+    Tính toán mã băm MD5 cho nội dung và thêm tiền tố (nếu có).
+    Args:
+        content (str): Nội dung cần tính toán mã băm.
+        prefix (str, optional): Tiền tố thêm vào trước mã băm. Mặc định là chuỗi rỗng.
+    Returns:
+        str: Chuỗi mã băm MD5 của nội dung, kèm theo tiền tố (nếu có).
+    """
+    return prefix + md5(content.encode()).hexdigest()
 
 @dataclass 
 class EmbeddingFunc:
