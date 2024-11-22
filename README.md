@@ -1,5 +1,4 @@
 ## Flow Chart
-<div align="center">
 <img src="static/pipeline.png" alt="Pipeline" width=500/>
 
 
