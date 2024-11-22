@@ -3,7 +3,9 @@ import html
 import os
 from dataclasses import dataclass
 from networkx import nx
+from nano_vectordb import NanoVectorDB
 from typing import List, Dict, Any
+from config import Settings
 from utils.utilities import load_json, write_json, logger
 from utils.schema import BaseKVStorage, BaseVectorStorage, BaseGraphStorage
 
@@ -58,11 +60,20 @@ class NanoVectorStorage(BaseVectorStorage):
     cosine_threshold: float = 0.2
 
     def __post_init__(self):
-        self._client_name = os.path.join(
+        self._vector_storage_path = os.path.join(
             self.global_config['working_dir'], f"vdb_{self.namespace}.db"
         )
-        
-    pass
+        self._client = NanoVectorDB(
+            embedding_dim=self.embedding_func.embedding_dim, 
+            storage_file=self._vector_storage_path
+        )
+        self.cosine_threshold = self.global_config.get('cosine_threshold', self.cosine_threshold)
+
+    async def upsert(self, data: Dict[str, Dict[str, Any]]):
+        logger.info(f"Inserting {len(data)} vectors to {self.namespace}")
+        if not len(data):
+            logger.warning("You insert an empty data to vector DB")
+            return []
 
 class NetworkXStorage():
     pass
