@@ -6,7 +6,7 @@
 
 
 ## Citation
-```python
+```bash
 @article{guo2024lightrag,
 title={LightRAG: Simple and Fast Retrieval-Augmented Generation},
 author={Zirui Guo and Lianghao Xia and Yanhua Yu and Tu Ao and Chao Huang},
