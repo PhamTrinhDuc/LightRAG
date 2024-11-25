@@ -35,7 +35,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 @retry(
     stop=stop_after_attempt(3), # dừng sau 3 lần thử
     wait=wait_exponential(multiplier=1, min=4, max=10), # thời gian chờ giữa các lần thửtăng theo cấp số nhân
-    retry=retry_if_exception_type(RateLimitError, APIConnectionError, Timeout) # thử lại nếu gặp lỗi RateLimitError, APIConnectionError, Timeout
+    retry=retry_if_exception_type(RateLimitError | APIConnectionError | Timeout) # thử lại nếu gặp lỗi RateLimitError, APIConnectionError, Timeout
 )
 async def openai_complete_if_cache(
     model,
@@ -100,7 +100,7 @@ async def openai_complete_if_cache(
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
-    retry=retry_if_exception_type(RateLimitError, APIConnectionError, Timeout)
+    retry=retry_if_exception_type(RateLimitError | APIConnectionError | Timeout)
 )
 async def aruze_openai_complete_if_cache(
     model,
@@ -278,7 +278,7 @@ async def ollama_model_if_cache(
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
-    retry=retry_if_exception_type(RateLimitError, APIConnectionError, Timeout)
+    retry=retry_if_exception_type(RateLimitError | APIConnectionError |Timeout)
 )
 async def openai_embedding(
     texts: List[str],
