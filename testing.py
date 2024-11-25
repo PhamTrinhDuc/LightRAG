@@ -1,4 +1,5 @@
 from src.llms import openai_complete_if_cache, openai_embedding
+from src.lightrag import LightRAG
 import os
 import asyncio
 
@@ -12,11 +13,15 @@ async def main():
     # print(response) => text response
     #=====================================================================================
     # test async function openai embedding  
-    response = await openai_embedding(texts = ["hello", "hi"])
-    print(response.shape) # => shape = (2, 1536)
+    # response = await openai_embedding(texts = ["hello", "hi"])
+    # print(response.shape) # => shape = (2, 1536)
+
+    # test lightrag
+    rag = LightRAG()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+    # main()
 
 

@@ -1,8 +1,8 @@
 import asyncio
 import html
 import os
+import networkx as nx
 from dataclasses import dataclass
-from networkx import nx
 from nano_vectordb import NanoVectorDB
 from typing import List, Dict, Any
 from config import Settings
@@ -24,15 +24,21 @@ class JsonKVStorage(BaseKVStorage):
 
     def __post_init__(self):
         working_dir: str = self.global_config['working_dir']
-        self._file_name_data: str = os.path.join(working_dir, f"{self.name_space}.json")
+        self._file_name_data: str = os.path.join(working_dir, f"{self.namespace}.json")
         self._data_json: Dict[str, Dict[str, Any]]  = load_json(file_name=self._file_name_data)
-        logger.info(f"Load KV {self.namespace} with {len(self._data)} data")
+        logger.info(f"Load KV {self.namespace} with {len(self._data_json)} data")
     
     async def index_done_callback(self):
+        """Write data to json file after indexing"""
         write_json(json_obj=self._data_json, file_name=self._file_name_data)
 
     async def get_by_id(self, id: str) -> dict:
+        """Get json data by id from current data"""
         return self._data_json.get(id, None)
+    
+    async def filter_keys(self, data: list[str]) -> set[str]:
+        """Get keys in data that not in current data"""
+        return set([key for key in data if key not in self._data_json])
     
     async def get_by_ids(self, ids: List[str], fields: List[str] = None) -> List[dict]:
         if fields is None:
@@ -74,6 +80,7 @@ class NanoVectorStorage(BaseVectorStorage):
         if not len(data):
             logger.warning("You insert an empty data to vector DB")
             return []
+
 
 class NetworkXStorage():
     pass

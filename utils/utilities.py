@@ -60,7 +60,7 @@ def compute_args_has(*args):
     return md5(str(args).encode()).hexdigest()
 
 
-def compute_mdhash_id(content, prefix: str = ""):
+def compute_mdhash_id(content: str, prefix: str = ""):
     """
     Tính toán mã băm MD5 cho nội dung và thêm tiền tố (nếu có).
     Args:

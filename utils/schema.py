@@ -57,13 +57,20 @@ class BaseKVStorage(Generic[T], StorageNameSpace):
     embedding_func: EmbeddingFunc
 
     async def all_keys(self) -> list[str]:
+        """Get all keys in current data"""
         raise NotImplementedError
     
     async def get_by_id(self, id: str) -> Union[T, None]:
+        """Get data by id from current data"""
+        raise NotImplementedError
+    
+    async def filter_keys(self, data: list[str]) -> set[str]:
+        """Get keys in data that not in current data"""
         raise NotImplementedError
     
     async def upsert(self, data: dict[str, T]):
         raise NotImplementedError
+    
 
 class BaseGraphStorage(StorageNameSpace):
     pass
