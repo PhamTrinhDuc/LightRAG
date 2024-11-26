@@ -2,6 +2,8 @@ import asyncio
 import html
 import os
 import networkx as nx
+import numpy as np
+from tqdm.asyncio import tqdm as tqdm_async
 from dataclasses import dataclass
 from nano_vectordb import NanoVectorDB
 from typing import List, Dict, Any
@@ -69,6 +71,7 @@ class NanoVectorStorage(BaseVectorStorage):
         self._vector_storage_path = os.path.join(
             self.global_config['working_dir'], f"vdb_{self.namespace}.db"
         )
+        self._max_batch_size = self.global_config.get('max_batch_size', 8)
         self._client = NanoVectorDB(
             embedding_dim=self.embedding_func.embedding_dim, 
             storage_file=self._vector_storage_path
@@ -80,6 +83,32 @@ class NanoVectorStorage(BaseVectorStorage):
         if not len(data):
             logger.warning("You insert an empty data to vector DB")
             return []
+        list_data = [
+            {
+                "__id__": k,
+                **{k1: v1 for k1, v1 in v.items() if k1 in self.meta_fields}
+            }
+            for k, v in data.items()
+        ]
+
+        contents = [v['content'] for v in data.values()]
+        batches = [contents[i: i + self._max_batch_size]
+                        for i in range(0, len(data), self._max_batch_size)]
+        
+        embeddings_task = [self.embedding_func(batch) for batch in batches]
+        embedding_list = []
+        for task in tqdm_async(
+            asyncio.as_completed(embeddings_task),
+            total=len(embeddings_task),
+            desc = "Genrerating embeddings",
+            unit="batch"
+        ):
+            embedding_list.append(await task)
+        embeddings = np.concatenate(embedding_list)
+        for idx, value in enumerate(embedding_list):
+            value['__vector__'] = embeddings[idx]
+        results = await self._client.upsert(datas=list_data)
+        return results
 
 
 class NetworkXStorage():

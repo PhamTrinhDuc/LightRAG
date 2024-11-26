@@ -15,9 +15,11 @@ async def main():
     # test async function openai embedding  
     # response = await openai_embedding(texts = ["hello", "hi"])
     # print(response.shape) # => shape = (2, 1536)
-
+    # =====================================================================================
     # test lightrag
     rag = LightRAG()
+    res = await rag.full_docs.filter_keys(data=['a', 'b', 'c'])
+    print(res)
 
 
 if __name__ == "__main__":

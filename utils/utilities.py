@@ -71,6 +71,20 @@ def compute_mdhash_id(content: str, prefix: str = ""):
     """
     return prefix + md5(content.encode()).hexdigest()
 
+def decode_tokens_by_tiktoken(tokens: list[int], model_name: str = "gpt-4o-mini"):
+    global ENCODER
+    if ENCODER is None:
+        ENCODER = tiktoken.encoding_for_model(model_name=model_name)
+    content = ENCODER.decode(tokens=tokens)
+    return content
+
+def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini"):
+    global ENCODER
+    if ENCODER is None:
+        ENCODER = tiktoken.encoding_for_model(model_name=model_name)
+    tokens = ENCODER.encode(content)
+    return tokens
+
 @dataclass 
 class EmbeddingFunc:
     """

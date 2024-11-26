@@ -3,6 +3,7 @@ import os
 from typing import Type, cast
 from datetime import datetime
 from dataclasses import dataclass, asdict, field
+from tqdm.asyncio import tqdm as tqdm_async
 from functools import partial
 from typing import Union, List, Dict, Any
 
@@ -62,7 +63,7 @@ class ConfigParams:
     #text chunk 
     chunk_token_size: int = 1200
     chunk_overlap_token_size: int = 200
-    tiktoken_model_name: str = "gpt-40-mini"
+    tiktoken_model_name: str = "gpt-4o-mini"
 
     # entity extraction
     entity_extract_max_gleaning: int = 1
@@ -92,46 +93,100 @@ class LightRAG:
     config = ConfigParams()
 
     def __post_init__(self):
-        # log_file: str = os.path.join("log", self.config.working_dir, "lightrag.log")
-        # set_logger(log_file)
-        # logger.setLevel(self.log_level)
-        # logger.info("Logger initialized for working directory: %s", self.config.working_dir)
+        log_file: str = os.path.join("log", self.config.working_dir, "lightrag.log")
+        set_logger(log_file)
+        logger.setLevel(self.log_level)
+        logger.info("Logger initialized for working directory: %s", self.config.working_dir)
         
         # mappping storage name to storage class
         self.json_kv_storage_cls: Type[BaseKVStorage] = self.config.storage_classes['JsonKVStorage']
         self.vector_storage_cls: Type[BaseVectorStorage] = self.config.storage_classes['NanoVectorDBStorage']
         self.graph_storage_cls: Type[BaseGraphStorage] = self.config.storage_classes['NetworkXStorage'] 
 
-        self.full_docs = self.json_kv_storage_cls(
+        self.full_docs_kv = self.json_kv_storage_cls(
             namespace="full_docs",
             global_config=asdict(self.config),
             embedding_func=self.config.embedding_func,
-        ).filter_keys(data=['a', 'b'])
-
-        self.text_chunks = self.json_kv_storage_cls(
+        )        
+        self.text_chunks_kv = self.json_kv_storage_cls(
             namespace="text_chunks",
             global_config=asdict(self.config),
             embedding_func=self.config.embedding_func,
         )
+        
 
+        self.entities_vdb = self.vector_storage_cls(
+            namespace="entities",
+            global_config=asdict(self.config),
+            embedding_func=self.config.embedding_func,
+            meta_fields={"entity_name"}
+        )
 
-    # def _get_storage_class(self) -> Type[BaseGraphStorage]:
-    #     return {
-    #         "JsonKVStorage": JsonKVStorage,
-    #         "NanoVectorDBStorage": NanoVectorStorage,
-    #         "NetworkXStorage": NetworkXStorage,
-    #     }
+        self.relationships_vdb = self.vector_storage_cls(
+            namespace="relationships",
+            global_config=asdict(self.config),
+            embedding_func=self.config.embedding_func,
+            meta_fields={"src_id", "tgt_id"}
+        )
+
+        self.chunks_vdb = self.vector_storage_cls(
+            namespace="chunks",
+            global_config=asdict(self.config),
+            embedding_func=self.config.embedding_func,
+        )
 
     async def ainsert(self, data: Union[str, List[str]]):
         update_storage = False
         try:
             if isinstance(data, str):
                 data = [data]
+            # 1. Lưu trữ toàn bộ văn bản trong data vào full_docs_kv - class: JsonKVStorage
             new_docs = {
                 compute_mdhash_id(content=text.strip(), prefix="doc-"): {"content": text.strip()}
                 for text in data
-            } # dict[str, dict[str, str]]
-            new_key_in_docs = await self.full_docs.filter_keys()
+            } 
+            # lọc ra những key chưa có trong new docs dựa vào data đã có
+            new_key_in_docs = await self.full_docs_kv.filter_keys(data=new_docs)
+            # lấy ra những data chưa có trong new docs dựa vào key đã lọc
+            new_docs = {k: v for k, v in new_docs.items() if k in new_key_in_docs}
+            if not len(new_docs):
+                logger.warning("All docs are already in the storage")
+                return 
+            await self.full_docs_kv.upsert(data=new_docs)
+
+            update_storage = True
+            logger.info(f"[New docs] inserting {len(new_docs)} docs")
+
+            # 2. Tách văn bản thành các phần nhỏ hơn và lưu trữ vào text_chunks_storagekv - class: JsonKVStorage
+            inserting_chunks = {}
+            for doc_key, doc in tqdm_async(
+                iterable=new_docs.items(), 
+                desc="Chunking docs", 
+                unit="doc"):
+                chunks = {
+                    compute_mdhash_id(content=doc['content'], prefix="chunk-"): {
+                        **dp, "full_doc_id": doc_key
+                    }
+                    for dp in chunking_by_token_size(
+                        content=doc['content'],
+                        max_token_size=self.config.chunk_token_size,
+                        overlap_token_size=self.config.chunk_overlap_token_size,
+                        tiktoken_model_name=self.config.tiktoken_model_name
+                    )
+                }
+                inserting_chunks.update(chunks)
+            new_key_in_chunks = await self.text_chunks_kv.filter_keys(data=inserting_chunks)
+            inserting_chunks = {k: v for k, v in inserting_chunks.items() if k not in new_key_in_chunks}
+            if not len(inserting_chunks):
+                logger.warning("All chunks are already in the storage")
+                return
+            await self.text_chunks_kv.upsert(data=inserting_chunks)
+            # Thêm các chunk vào vector database
+            await self.chunks_vdb.upsert(data=inserting_chunks)
+            logger.info(f"[New chunks] inserting {len(inserting_chunks)} chunks")
+
+            # 3. Trích xuất các thực thể từ các chunks và lưu trữ vào entities_vdb - class: NanoVectorDBStorage
+
 
 
         except Exception as e:
