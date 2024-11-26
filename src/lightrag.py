@@ -113,7 +113,6 @@ class LightRAG:
             global_config=asdict(self.config),
             embedding_func=self.config.embedding_func,
         )
-        
 
         self.entities_vdb = self.vector_storage_cls(
             namespace="entities",
