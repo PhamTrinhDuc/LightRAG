@@ -1,5 +1,7 @@
 import re
+import asyncio
 from collections import Counter, defaultdict
+from tqdm.asyncio import tqdm as tqdm_async
 from utils.schema import TextChunkSchema
 from src.prompt import PROMPTS
 from src.storage import BaseGraphStorage, BaseVectorStorage, BaseKVStorage
@@ -34,7 +36,7 @@ def chunking_by_token_size(content: str,
         })
     return results
 
-def _handle_single_entity_extraction(
+async def _handle_single_entity_extraction(
         record_attribute: list[str], # ['entity', 'Alex', 'person', 'description ...'] 
         chunk_key: str):
     if len(record_attribute) < 4 or '"entity"' not in record_attribute[0].lower():
@@ -53,7 +55,7 @@ def _handle_single_entity_extraction(
         source_id = entity_source_id
     )
 
-def _handle_single_relation_extraction(
+async def _handle_single_relation_extraction(
         record_attribute: list[str], # ['relationship', 'Alex', 'Taylor', 'desctiption', 'keyword', 'weight edge']
         chunk_key: str
 ):
@@ -80,7 +82,14 @@ def _handle_single_relation_extraction(
         source_id = edge_source_id
     )
 
-def extract_entities(
+async def _merge_node_then_upsert():
+    pass
+
+async def _merge_edges_then_upsert():
+    pass
+
+
+async def extract_entities(
         chunks: dict[str, TextChunkSchema],
         knowledge_graph_inst: BaseGraphStorage,
         entity_vdb: BaseVectorStorage,
@@ -170,13 +179,27 @@ def extract_entities(
             flush=True,
         )
         return dict(maybe_nodes), dict(maybe_edges)
-
-
     
+    results = []
+    ordered_chunks = list(chunks.items())
+    for result in tqdm_async(
+        iterable=asyncio.as_completed([_process_single_content(chunk) for chunk in ordered_chunks]),
+        desc="Extracting entities from chunks",
+        unit="chunk",
+        total=len(ordered_chunks)
+    ):
+        results.append(await result)
+    maybe_nodes = defaultdict(list)
+    maybe_edges = defaultdict(list)
+
+    for node, edge in results:
+        for k, v in node.items():
+            maybe_nodes[k].extend(edge)
         
-
-
-
+        for k, v in edge.items():
+            maybe_edges[tuple(sorted(k))].extend(v)
+    
+    
 
 
 
