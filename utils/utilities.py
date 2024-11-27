@@ -33,13 +33,15 @@ def set_logger(log_file: str):
     if not logger.handlers:
         logger.addHandler(file_handler)
 
-def load_json(file_name):
+def load_json(file_name: str) -> dict:
+    """Read json file from path provided"""
     if not os.path.exists(file_name):
         return {}
     with open(file=file_name, encoding="utf-8", mode='r') as f:
         return json.load(f)
 
-def write_json(json_obj, file_name: str):
+def write_json(json_obj: dict, file_name: str):
+    """Write json object to path provided"""
     with open(file=file_name, encoding="utf-8", mode='w') as f:
         json.dump(json_obj, f, ensure_ascii=False, indent=4)
 
@@ -84,6 +86,21 @@ def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini"):
         ENCODER = tiktoken.encoding_for_model(model_name=model_name)
     tokens = ENCODER.encode(content)
     return tokens
+
+def format_to_openai_message(prompt: str, response: str):
+    """Format prompt and response to form openai message"""
+    return [
+        {"role": "user", "content": prompt},
+        {"role": "assistant", "content": response}
+    ]
+
+def split_string_by_multi_markers(content: str, markers: list[str]) -> list[str]:
+    """Split string by multiple markers"""
+    if not markers:
+        return [content]
+    # print("|".join(re.escape(marker) for marker in markers)) # ,|;|:
+    results = re.split(pattern="|".join(re.escape(marker) for marker in markers), string=content)
+    return results
 
 @dataclass 
 class EmbeddingFunc:

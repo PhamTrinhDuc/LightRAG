@@ -109,6 +109,18 @@ class NanoVectorStorage(BaseVectorStorage):
             value['__vector__'] = embeddings[idx]
         results = await self._client.upsert(datas=list_data)
         return results
+    
+    async def query():
+        pass
+
+    async def delete_entity():
+        pass
+
+    async def delete_relation():
+        pass
+
+    def index_done_callback(self):
+        pass
 
 
 class NetworkXStorage():
