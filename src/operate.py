@@ -1,8 +1,11 @@
-
+import re
+from collections import Counter, defaultdict
 from utils.schema import TextChunkSchema
 from src.prompt import PROMPTS
 from src.storage import BaseGraphStorage, BaseVectorStorage, BaseKVStorage
 from utils.utilities import (
+    clean_str,
+    is_float_regex,
     encode_string_by_tiktoken,
     decode_tokens_by_tiktoken,
     format_to_openai_message,
@@ -31,6 +34,51 @@ def chunking_by_token_size(content: str,
         })
     return results
 
+def _handle_single_entity_extraction(
+        record_attribute: list[str], # ['entity', 'Alex', 'person', 'description ...'] 
+        chunk_key: str):
+    if len(record_attribute) < 4 or '"entity"' not in record_attribute[0].lower():
+        return None
+    
+    entity_name = clean_str(record_attribute[1])
+    if not entity_name.strip():
+        return None
+    entity_type = clean_str(record_attribute[2].upper())
+    entity_desc = clean_str(record_attribute[3])
+    entity_source_id = chunk_key
+    return dict(
+        entity_name = entity_name,
+        entity_type = entity_type,
+        entity_desc = entity_desc,
+        source_id = entity_source_id
+    )
+
+def _handle_single_relation_extraction(
+        record_attribute: list[str], # ['relationship', 'Alex', 'Taylor', 'desctiption', 'keyword', 'weight edge']
+        chunk_key: str
+):
+    if len(record_attribute) < 6 or '"relationship"' not in record_attribute[0].lower():
+        return None
+    
+    source_node = clean_str(record_attribute[1].upper())
+    target_node = clean_str(record_attribute[2].upper())
+    if not source_node or not target_node: 
+        return None
+    edge_desc = clean_str(record_attribute[3])
+    edge_keyword = clean_str(record_attribute[4])
+    weight_edge = (
+        float(record_attribute[-1] if is_float_regex(record_attribute[-1]) else 1.0)
+    )
+    edge_source_id = chunk_key
+
+    return dict(
+        source_node = source_node,
+        target_node = target_node,
+        edge_desc = edge_desc,
+        weight_edge = weight_edge,
+        edge_keyword = edge_keyword,
+        source_id = edge_source_id
+    )
 
 def extract_entities(
         chunks: dict[str, TextChunkSchema],
@@ -81,6 +129,51 @@ def extract_entities(
             markers=[context_base['complete_delimiter'], context_base['record_delimiter']]
         )
 
+        maybe_nodes = defaultdict()
+        maybe_edges = defaultdict()
+
+        for record in records:
+            record = re.search(r"\((.*)\)", record) # see in 'entity_extraction' PROMPT to understand 
+            if record is None:
+                continue
+
+            record = record.group(1)
+            record_attribute: list[str] = split_string_by_multi_markers(
+                content=record,
+                markers=[context_base['tuple_delimiter']]
+            ) # see in 'entity_extraction' PROMPT to understand 
+
+            if_entities = await _handle_single_entity_extraction(record_attribute=record_attribute,
+                                                                 chunk_key=chunk_key)
+            
+            if if_entities is not None:
+                maybe_nodes[if_entities['entity_name']].append(if_entities)
+                continue
+            
+            if_relations = await _handle_single_relation_extraction(
+                record_attribute=record_attribute,
+                chunk_key=chunk_key
+            )
+
+            if if_relations is not None:
+                maybe_edges[(if_entities['source_node'], if_entities['target_node'])].append(if_entities)
+        
+        already_processed += 1
+        already_entities += len(maybe_nodes)
+        already_relations += len(maybe_edges)
+        now_ticks = PROMPTS["process_tickers"][
+            already_processed % len(PROMPTS["process_tickers"])
+        ]
+        print(
+            f"{now_ticks} Processed {already_processed} chunks, {already_entities} entities(duplicated), {already_relations} relations(duplicated)\r",
+            end="",
+            flush=True,
+        )
+        return dict(maybe_nodes), dict(maybe_edges)
+
+
+    
+        
 
 
 

@@ -102,6 +102,22 @@ def split_string_by_multi_markers(content: str, markers: list[str]) -> list[str]
     results = re.split(pattern="|".join(re.escape(marker) for marker in markers), string=content)
     return results
 
+def clean_str(input: Any) -> str:
+    """Clean an input string by removing HTML escapes, control characters, and other unwanted characters."""
+    # If we get non-string input, just give it back
+    if not isinstance(input, str):
+        return input
+
+    result = html.unescape(input.strip())
+    # https://stackoverflow.com/questions/4324790/removing-control-characters-from-a-string-in-python
+    return re.sub(r"[\x00-\x1f\x7f-\x9f]", "", result)
+
+def is_float_regex(value):
+    """Regex to check if string is a number"""
+    return bool(re.match(r"^[-+]?[0-9]*\.?[0-9]+$", value))
+
+
+
 @dataclass 
 class EmbeddingFunc:
     """

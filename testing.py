@@ -5,7 +5,6 @@ from src.lightrag import LightRAG
 import os
 import asyncio
 
-
 async def main():
     # test async function openai gpt4o-mini
     # response = await openai_complete_if_cache(
@@ -32,7 +31,6 @@ async def main():
     results = chunking_by_token_size(content=content)
     print(results)
     # ====================================================================================
-
 if __name__ == "__main__":
     asyncio.run(main())
     # main()
