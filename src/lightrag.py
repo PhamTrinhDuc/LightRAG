@@ -7,10 +7,7 @@ from tqdm.asyncio import tqdm as tqdm_async
 from functools import partial
 from typing import Union, List, Dict, Any
 
-from .llms import (
-    openai_complete_if_cache,
-    openai_embedding
-)
+from config import ConfigParams
 
 from .operate import (
     chunking_by_token_size, 
@@ -21,71 +18,17 @@ from .operate import (
     naive_query
 )
 
-from.storage import (
-    JsonKVStorage,
-    NanoVectorStorage,
-    NetworkXStorage
-)
-
 from utils.schema import (
     BaseKVStorage, 
     BaseVectorStorage,
-    StorageNameSpace,
     BaseGraphStorage,
-    EmbeddingFunc
 )
 
 from utils.utilities import (
+    logger,
     set_logger, 
-    logger, 
     compute_mdhash_id,
 )
-
-
-@dataclass
-class ConfigParams:
-    current_log_level = logger.level
-    log_level: str = field(default=current_log_level)
-    
-    storage_classes: dict = field(
-        default_factory=lambda: {
-            "JsonKVStorage": JsonKVStorage,
-            "NanoVectorDBStorage": NanoVectorStorage,
-            "NetworkXStorage": NetworkXStorage
-        }
-    )
-
-    # directory
-    working_dir: str = field(
-        default_factory= lambda: f"./lightrag_cache_{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
-    )
-
-    #text chunk 
-    chunk_token_size: int = 1200
-    chunk_overlap_token_size: int = 200
-    tiktoken_model_name: str = "gpt-4o-mini"
-
-    # entity extraction
-    entity_extract_max_gleaning: int = 1
-    entity_summary_to_max_token: int = 500
-
-    # node embedding
-    node_embedding_algorithm: str = "node2vec"
-    node2vec_params: dict = field(
-        default_factory=lambda: {
-            "dimentions": 1536,
-            "num_walks": 10,
-            "walk_length": 10,
-            "windown_size": 2,
-            "iterations": 3,
-            "random_seed": 3
-        }
-    )
-    # embedding model
-    embedding_func: EmbeddingFunc = field(default_factory=lambda: openai_embedding)
-    embedding_batch_num: int = 32
-    embedding_func_max_async: int = 16
-
 
 @dataclass
 class LightRAG:
@@ -103,6 +46,7 @@ class LightRAG:
         self.vector_storage_cls: Type[BaseVectorStorage] = self.config.storage_classes['NanoVectorDBStorage']
         self.graph_storage_cls: Type[BaseGraphStorage] = self.config.storage_classes['NetworkXStorage'] 
 
+        # JSONKVStorage
         self.full_docs_kv = self.json_kv_storage_cls(
             namespace="full_docs",
             global_config=asdict(self.config),
@@ -114,6 +58,13 @@ class LightRAG:
             embedding_func=self.config.embedding_func,
         )
 
+        # Graph Storage
+        self.chunk_entity_relation_graph = self.graph_storage_cls(
+            namespace="chunk_entity_relation",
+            global_config=asdict(self.config)
+        )
+
+        # Vectordb Storage
         self.entities_vdb = self.vector_storage_cls(
             namespace="entities",
             global_config=asdict(self.config),
@@ -185,8 +136,13 @@ class LightRAG:
             logger.info(f"[New chunks] inserting {len(inserting_chunks)} chunks")
 
             # 3. Trích xuất các thực thể từ các chunks và lưu trữ vào entities_vdb - class: NanoVectorDBStorage
-
-
+            maybe_new_kg = await extract_entities(
+                chunks=inserting_chunks,
+                knowledge_graph_inst=self.chunk_entity_relation_graph,
+                entity_vdb=self.entities_vdb,
+                relationship_vdb=self.relationships_vdb,
+                global_config=asdict(self.config),
+            )
 
         except Exception as e:
             pass

@@ -33,6 +33,9 @@ def set_logger(log_file: str):
     if not logger.handlers:
         logger.addHandler(file_handler)
 
+def convert_response_to_json():
+    pass
+
 def load_json(file_name: str) -> dict:
     """Read json file from path provided"""
     if not os.path.exists(file_name):

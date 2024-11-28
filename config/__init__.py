@@ -1,1 +1,1 @@
-from .setting import Settings
+from .setting import ConfigParams

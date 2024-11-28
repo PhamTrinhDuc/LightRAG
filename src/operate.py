@@ -90,22 +90,24 @@ async def _merge_edges_then_upsert():
 
 
 async def extract_entities(
-        chunks: dict[str, TextChunkSchema],
-        knowledge_graph_inst: BaseGraphStorage,
-        entity_vdb: BaseVectorStorage,
-        relationship_vdb: BaseVectorStorage,
-        global_config: dict
+    global_config: dict,
+    chunks: dict[str, TextChunkSchema],
+    knowledge_graph_inst: BaseGraphStorage,
+    entity_vdb: BaseVectorStorage,
+    relationship_vdb: BaseVectorStorage,
 ):
+    
     use_llm_func: callable = global_config['llm_model_func'] # llm
     entity_extract_max_gleaning: int = global_config['entity_extract_max_gleaning'] # num of iterations to extract entity
 
     entity_extract_prompt = PROMPTS['entity_extraction']
     context_base = dict(
         tuple_delimiter = PROMPTS['DEFAULT_TUPLE_DELIMITER'],
-        record_delimier = PROMPTS['DEFAULT_RECORD_DELIMITER'],
-        complete_delimiter = PROMPTS['DEFAULT_COMPLETION_DEMILITER'],
-        enity_type = PROMPTS['DEFAULT_ENTITY_TYPES'],
+        record_delimiter = PROMPTS['DEFAULT_RECORD_DELIMITER'],
+        completion_delimiter = PROMPTS['DEFAULT_COMPLETION_DEMILITER'],
+        entity_types = PROMPTS['DEFAULT_ENTITY_TYPES'],
     )
+
     continue_prompt = PROMPTS['entity_continue_extraction']
     if_loop_prompt = PROMPTS['entity_if_loop_extraction'] 
 
@@ -138,8 +140,8 @@ async def extract_entities(
             markers=[context_base['complete_delimiter'], context_base['record_delimiter']]
         )
 
-        maybe_nodes = defaultdict()
-        maybe_edges = defaultdict()
+        maybe_nodes: dict[str, list[dict]] = defaultdict(list)
+        maybe_edges: dict[tuple[str, str], list[dict]] = defaultdict(list)
 
         for record in records:
             record = re.search(r"\((.*)\)", record) # see in 'entity_extraction' PROMPT to understand 
