@@ -1,19 +1,8 @@
-import numpy as np
 from dataclasses import dataclass, field
-from typing import TypedDict, Union, Literal, Generic, TypeVar
-from utils.utilities import EmbeddingFunc
+from typing import Union, Generic
+from common.utils import EmbeddingFunc
 
-TextChunkSchema = TypedDict(
-    "TextChunkSchema", 
-    {
-        "tokens": int,
-        "content": str,
-        "full_doc_id": str,
-        "chunk_order_index": int
-    }
-)
-T = TypeVar("T")
-    
+
 @dataclass
 class StorageNameSpace:
     """

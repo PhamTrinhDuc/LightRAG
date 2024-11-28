@@ -7,8 +7,8 @@ from tqdm.asyncio import tqdm as tqdm_async
 from dataclasses import dataclass
 from nano_vectordb import NanoVectorDB
 from typing import List, Dict, Any
-from utils.utilities import load_json, write_json, logger
-from utils.schema import BaseKVStorage, BaseVectorStorage, BaseGraphStorage
+from common.utils import load_json, write_json, logger
+from common.base import BaseKVStorage, BaseVectorStorage, BaseGraphStorage
 
 @dataclass
 class JsonKVStorage(BaseKVStorage):

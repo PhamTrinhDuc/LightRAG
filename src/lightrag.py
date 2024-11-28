@@ -9,22 +9,25 @@ from typing import Union, List, Dict, Any
 
 from config import ConfigParams
 
-from .operate import (
-    chunking_by_token_size, 
-    extract_entities,
-    local_query, 
-    global_query, 
-    hybrid_query, 
-    naive_query
+from operate.query import (
+    local_query,
+    naive_query,
+    hybrid_query,
+    global_query
 )
 
-from utils.schema import (
+from operate.extract_graph import (
+    extract_entities, 
+    chunking_by_token_size
+)
+
+from common.base import (
     BaseKVStorage, 
     BaseVectorStorage,
     BaseGraphStorage,
 )
 
-from utils.utilities import (
+from common.utils import (
     logger,
     set_logger, 
     compute_mdhash_id,
@@ -130,8 +133,10 @@ class LightRAG:
             if not len(inserting_chunks):
                 logger.warning("All chunks are already in the storage")
                 return
+            
+            # Insert chunk to JsonKV
             await self.text_chunks_kv.upsert(data=inserting_chunks)
-            # Thêm các chunk vào vector database
+            # Insert chunk to vector database
             await self.chunks_vdb.upsert(data=inserting_chunks)
             logger.info(f"[New chunks] inserting {len(inserting_chunks)} chunks")
 
