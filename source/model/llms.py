@@ -43,7 +43,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 )
 async def openai_complete_if_cache(
     prompt: str,
-    model: str = Literal["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo", "gpt-4-turbo"],
+    model: Literal["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo", "gpt-4-turbo"] = "gpt-4o-mini",
     system_prompt: str = None,
     history_messages: List =  [],
     base_url: str = None,
@@ -111,11 +111,11 @@ async def groq_complete_if_cache(
     history_message: List = [],
     base_url: str = None,
     api_key: str = None,
-    model: str = Literal["llama3-70b-8192", 
-                         "llama-3.1-70b-versatile", 
-                         "llava-v1.5-7b-4096-preview", 
-                         "gemma2-9b-it", 
-                         "mixtral-8x7b-32768",],
+    model: Literal["llama3-70b-8192", 
+                   "llama-3.1-70b-versatile", 
+                   "llava-v1.5-7b-4096-preview", 
+                   "gemma2-9b-it", 
+                   "mixtral-8x7b-32768",] = "llama-3.1-70b-versatile",
     **kwargs,
 ) -> str:
     if api_key: 
