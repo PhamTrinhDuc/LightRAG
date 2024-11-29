@@ -42,8 +42,8 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
     retry=retry_if_exception_type(RateLimitError | APIConnectionError | Timeout) # thử lại nếu gặp lỗi RateLimitError, APIConnectionError, Timeout
 )
 async def openai_complete_if_cache(
-    prompt,
-    model: str = "gpt-4o-mini",
+    prompt: str,
+    model: str = Literal["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo", "gpt-4-turbo"],
     system_prompt: str = None,
     history_messages: List =  [],
     base_url: str = None,
