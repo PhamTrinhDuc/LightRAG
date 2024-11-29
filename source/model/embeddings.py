@@ -24,7 +24,7 @@ from tenacity import (
     retry_if_exception_type
 )
 import torch
-from utils.utilities import wrap_embedding_func_with_attrs
+from common.utils import wrap_embedding_func_with_attrs
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
