@@ -42,6 +42,7 @@ class BaseVectorStorage(StorageNameSpace):
         """
         raise NotImplementedError
     
+    
 @dataclass 
 class BaseKVStorage(Generic[T], StorageNameSpace):
     embedding_func: EmbeddingFunc

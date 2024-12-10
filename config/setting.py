@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from utils.schema import EmbeddingFunc
-from utils.utilities import convert_response_to_json, logger
-from src.storage import JsonKVStorage, NanoVectorStorage, NetworkXStorage
-from src.llms import openai_complete_if_cache, openai_embedding
+from common.utils import EmbeddingFunc, convert_response_to_json, logger
+from source.storage import JsonKVStorage, NanoVectorStorage, NetworkXStorage
+from source.model import openai_complete_if_cache, openai_embedding
 
 
 @dataclass
