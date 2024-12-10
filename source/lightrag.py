@@ -16,7 +16,7 @@ from operate.query import (
     global_query
 )
 
-from operate.extract_graph import (
+from source.operate.graph_extractor import (
     extract_entities, 
     chunking_by_token_size
 )

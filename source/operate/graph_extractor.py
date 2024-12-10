@@ -1,5 +1,6 @@
 import re
 import asyncio
+from typing import List
 from collections import Counter, defaultdict
 from tqdm.asyncio import tqdm as tqdm_async
 from typing import Dict, Tuple
@@ -28,11 +29,10 @@ from common.utils import (
     split_string_by_multi_markers
 )
 
-
 def chunking_by_token_size(content: str, 
                            max_token_size: int = 1024, 
                            overlap_token_size: int = 128, 
-                           tiktoken_model_name: str = "gpt-4o-mini"):
+                           tiktoken_model_name: str = "gpt-4o-mini") -> List[TextChunkSchema]:
     tokens = encode_string_by_tiktoken(content=content, model_name=tiktoken_model_name)
     # print("Tokens: ", tokens) # list numerical
     results = []
@@ -48,6 +48,7 @@ def chunking_by_token_size(content: str,
             "chunk_order_index": idx
         })
     return results
+
 
 async def _handle_single_entity_extraction(
         record_attribute: list[str], # ['entity', 'Alex', 'person', 'description ...'] 
@@ -70,6 +71,7 @@ async def _handle_single_entity_extraction(
         entity_desc = entity_desc,
         entity_source_id = entity_source_id
     )
+
 
 async def _handle_single_relation_extraction(
         record_attribute: list[str], # ['relationship', 'Alex', 'Taylor', 'desctiption', 'keyword', 'weight edge']
@@ -99,8 +101,10 @@ async def _handle_single_relation_extraction(
         edge_source_id = edge_source_id
     )
 
+
 async def _merge_nodes_then_upsert():
     pass
+
 
 async def _merge_edges_then_upsert():
     pass
@@ -115,8 +119,8 @@ async def _process_single_content(
     entity_extract_max_gleaning: int = global_config['entity_extract_max_gleaning'] # num of iterations to extract entity
     entity_extract_prompt = PROMPTS['entity_extraction']
     context_base = dict(
-        tuple_delimiter = PROMPTS['DEFAULT_TUPLE_DELIMITER'],
-        record_delimiter = PROMPTS['DEFAULT_RECORD_DELIMITER'],
+        tuple_delimiter = PROMPTS['DEFAULT_TUPLE_DELIMITER'], # <|>
+        record_delimiter = PROMPTS['DEFAULT_RECORD_DELIMITER'], # ##
         completion_delimiter = PROMPTS['DEFAULT_COMPLETION_DEMILITER'],
         entity_types = PROMPTS['DEFAULT_ENTITY_TYPES'],
     )
@@ -165,17 +169,17 @@ async def _process_single_content(
             markers=[context_base['tuple_delimiter']]
         ) # see in 'entity_extraction' PROMPT to understand 
 
-        if_entities: NodeSchema = await _handle_single_entity_extraction(record_attribute=record_attribute,
-                                                                chunk_key=chunk_key)
+        if_entities: NodeSchema = await _handle_single_entity_extraction(
+            record_attribute=record_attribute,
+            chunk_key=chunk_key)
         
         if if_entities is not None:
             maybe_nodes[if_entities['entity_name']].append(if_entities)
             continue
         
-        if_relations: RelationshipSchema = await _handle_single_relation_extraction(
+        if_relations: EdgeSchema = await _handle_single_relation_extraction(
             record_attribute=record_attribute,
-            chunk_key=chunk_key
-        )
+            chunk_key=chunk_key)
 
         if if_relations is not None:
             maybe_edges[(if_entities['source_node'], if_entities['target_node'])].append(if_entities)
@@ -194,7 +198,6 @@ async def _process_single_content(
     return dict(maybe_nodes), dict(maybe_edges)
 
 
-
 async def extract_entities(
     global_config: dict,
     chunks: dict[str, TextChunkSchema],
@@ -207,6 +210,7 @@ async def extract_entities(
     # get all node and relations from chunks ==============================
     results = []
     ordered_chunks = list(chunks.items())
+
     for result in tqdm_async(
         iterable=asyncio.as_completed([_process_single_content(chunk) for chunk in ordered_chunks]),
         desc="Extracting entities from chunks",
@@ -241,7 +245,7 @@ async def extract_entities(
     
     if not len(all_entities_data):
         logger.warning(
-            "Didn't extract any entities, mayby your LLM is not working"
+            "Didn't extract any entities, maybe your LLM is not working"
         )
         return None
 

@@ -33,8 +33,10 @@ def set_logger(log_file: str):
     if not logger.handlers:
         logger.addHandler(file_handler)
 
+
 def convert_response_to_json():
     pass
+
 
 def load_json(file_name: str) -> dict:
     """Read json file from path provided"""
@@ -42,6 +44,7 @@ def load_json(file_name: str) -> dict:
         return {}
     with open(file=file_name, encoding="utf-8", mode='r') as f:
         return json.load(f)
+
 
 def write_json(json_obj: dict, file_name: str):
     """Write json object to path provided"""
@@ -76,12 +79,14 @@ def compute_mdhash_id(content: str, prefix: str = ""):
     """
     return prefix + md5(content.encode()).hexdigest()
 
+
 def decode_tokens_by_tiktoken(tokens: list[int], model_name: str = "gpt-4o-mini"):
     global ENCODER
     if ENCODER is None:
         ENCODER = tiktoken.encoding_for_model(model_name=model_name)
     content = ENCODER.decode(tokens=tokens)
     return content
+
 
 def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini"):
     global ENCODER
@@ -90,6 +95,7 @@ def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini"):
     tokens = ENCODER.encode(content)
     return tokens
 
+
 def format_to_openai_message(prompt: str, response: str):
     """Format prompt and response to form openai message"""
     return [
@@ -97,13 +103,20 @@ def format_to_openai_message(prompt: str, response: str):
         {"role": "assistant", "content": response}
     ]
 
+
 def split_string_by_multi_markers(content: str, markers: list[str]) -> list[str]:
-    """Split string by multiple markers"""
+    """Split string by multiple markers
+    Example: 
+        content = "apple,banana;orange:grape"
+        markers = [",", ";", ":"] 
+        Output = ['apple', 'banana', 'orange', 'grape']
+    """
     if not markers:
         return [content]
     # print("|".join(re.escape(marker) for marker in markers)) # ,|;|:
     results = re.split(pattern="|".join(re.escape(marker) for marker in markers), string=content)
     return results
+
 
 def clean_str(input: Any) -> str:
     """Clean an input string by removing HTML escapes, control characters, and other unwanted characters."""
@@ -115,10 +128,10 @@ def clean_str(input: Any) -> str:
     # https://stackoverflow.com/questions/4324790/removing-control-characters-from-a-string-in-python
     return re.sub(r"[\x00-\x1f\x7f-\x9f]", "", result)
 
+
 def is_float_regex(value):
     """Regex to check if string is a number"""
     return bool(re.match(r"^[-+]?[0-9]*\.?[0-9]+$", value))
-
 
 
 @dataclass 
@@ -141,9 +154,10 @@ class EmbeddingFunc:
     async def __call__(self, *args, **kawrgs) -> np.ndarray:
         return await self.func(*args, **kawrgs)
     
+    
 def wrap_embedding_func_with_attrs(**kwargs):
     """
-    Hàm này là một decorator để bọc một hàm khác với các thuộc tính được cung cấp.
+    Hàm này là một decorator để wrap một hàm khác với các thuộc tính được cung cấp.
     Args:
         **kwargs: Các thuộc tính cần thiết để khởi tạo đối tượng EmbeddingFunc.
     Returns:

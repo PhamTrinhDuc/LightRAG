@@ -1,8 +1,8 @@
 from source.model import openai_complete_if_cache, openai_embedding
-from source.operate.extract_graph import chunking_by_token_size
+from source.operate.graph_extractor import chunking_by_token_size
 from common.utils import split_string_by_multi_markers
 from source.lightrag import LightRAG
-from source.operate.extract_graph import extract_entities
+from source.operate.graph_extractor import extract_entities
 from config.setting import ConfigParams
 from dataclasses import asdict
 import os
