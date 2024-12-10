@@ -1,7 +1,6 @@
 from typing import TypedDict, TypeVar
 
 
-T = TypeVar("T")
 
 class TextChunkSchema(TypedDict): # schema for data chunk to save in KVJson and VectorDB
     tokens: int

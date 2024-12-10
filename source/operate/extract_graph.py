@@ -3,8 +3,8 @@ import asyncio
 from collections import Counter, defaultdict
 from tqdm.asyncio import tqdm as tqdm_async
 from typing import Dict, Tuple
-from src.prompt import PROMPTS
-from src.storage import (
+from source.prompt import PROMPTS
+from common.base import (
     BaseGraphStorage, 
     BaseVectorStorage, 
     BaseKVStorage,

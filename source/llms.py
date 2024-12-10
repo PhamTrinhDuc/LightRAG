@@ -26,8 +26,8 @@ from tenacity import (
 )
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from utils.schema import BaseKVStorage
-from utils.utilities import compute_args_has, wrap_embedding_func_with_attrs
+from common.base import BaseKVStorage
+from common.utils import compute_args_has, wrap_embedding_func_with_attrs
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"

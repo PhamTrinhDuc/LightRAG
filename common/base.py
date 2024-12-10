@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Union, Generic
+from typing import Union, Generic, TypeVar
 from common.utils import EmbeddingFunc
 
+T = TypeVar("T")
 
 @dataclass
 class StorageNameSpace:
