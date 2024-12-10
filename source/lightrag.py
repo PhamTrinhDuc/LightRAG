@@ -25,6 +25,7 @@ from common.base import (
     BaseKVStorage, 
     BaseVectorStorage,
     BaseGraphStorage,
+    StorageNameSpace
 )
 
 from common.utils import (
@@ -44,12 +45,23 @@ class LightRAG:
         logger.setLevel(self.log_level)
         logger.info("Logger initialized for working directory: %s", self.config.working_dir)
         
+        if not os.path.exists(self.config.working_dir):
+            logger.info(f"Creating working directory {self.working_dir}")
+            os.makedirs(self.config.working_dir)
+            
         # mappping storage name to storage class
         self.json_kv_storage_cls: Type[BaseKVStorage] = self.config.storage_classes['JsonKVStorage']
         self.vector_storage_cls: Type[BaseVectorStorage] = self.config.storage_classes['NanoVectorDBStorage']
         self.graph_storage_cls: Type[BaseGraphStorage] = self.config.storage_classes['NetworkXStorage'] 
 
         # JSONKVStorage
+        self.llm_response_cache = (
+            self.json_kv_storage_cls(
+                namespace="llm_response_cache",
+                global_config=asdict(self.config),
+                embedding_func=None
+            ) if self.enable_llm_cache else None
+        )
         self.full_docs_kv = self.json_kv_storage_cls(
             namespace="full_docs",
             global_config=asdict(self.config),
@@ -134,7 +146,7 @@ class LightRAG:
                 logger.warning("All chunks are already in the storage")
                 return
             
-            # Insert chunk to JsonKV
+            # Insert chunk to json data
             await self.text_chunks_kv.upsert(data=inserting_chunks)
             # Insert chunk to vector database
             await self.chunks_vdb.upsert(data=inserting_chunks)
@@ -148,7 +160,24 @@ class LightRAG:
                 relationship_vdb=self.relationships_vdb,
                 global_config=asdict(self.config),
             )
+        finally:
+            if update_storage:
+                self._insert_callback_done()
 
-        except Exception as e:
-            pass
 
+    async def _insert_callback_done(self):
+        tasks = []
+        for storage_inst in [
+            self.full_docs_kv,
+            self.text_chunks_kv,
+            self.llm_response_cache,
+            self.chunks_vdb,
+            self.entities_vdb,
+            self.relationships_vdb,
+            self.chunk_entity_relation_graph
+        ]:
+            if storage_inst is not None:
+                tasks.append(cast(StorageNameSpace, storage_inst).index_done_callback())
+        await asyncio.gather(*tasks)
+
+            

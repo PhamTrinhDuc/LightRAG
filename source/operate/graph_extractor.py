@@ -23,6 +23,7 @@ from common.utils import (
     logger,
     clean_str,
     is_float_regex,
+    compute_mdhash_id,
     encode_string_by_tiktoken,
     decode_tokens_by_tiktoken,
     format_to_openai_message,
@@ -229,9 +230,9 @@ async def extract_entities(
             maybe_edges[tuple(sorted(k))].extend(v)
     
     
-    # merge node and edge ====================================================
-    logger.info('Inserting entities into storage...')
-    all_entities_data: list[NodeSchema] = []
+    # merge entities and relationships ====================================================
+    logger.info('Inserting entities into storage...') 
+    all_entities_data: list[NodeSchema] = [] # for entities
     for result in tqdm_async(
         iterable=asyncio.as_completed(
             _merge_nodes_then_upsert() 
@@ -250,7 +251,7 @@ async def extract_entities(
         return None
 
     logger.info('Inserting relationships into storage...')
-    all_relations_data: list[EdgeSchema] = []
+    all_relations_data: list[EdgeSchema] = [] # for relationships
     for result in tqdm_async(
         iterable=asyncio.as_completed(
             _merge_edges_then_upsert()
@@ -269,11 +270,26 @@ async def extract_entities(
         return None
 
     # store entities and relationships to vector database ======================================
-    if entity_vdb is not None:
-        pass
+    if entity_vdb is not None: # for entity
+        data_for_vdb = {
+            compute_mdhash_id(content=dp['entity_name'], prefix="ent-"): {
+                "entity_name": dp['entity_name'],
+                "content": dp['entity_name'] + dp['entity_desc']
+            }
+            for dp in all_entities_data
+        }
+        await entity_vdb.upsert(data=data_for_vdb)
 
-    if relationship_vdb is not None:
-        pass
+    if relationship_vdb is not None: # for relationship
+        data_for_vdb = {
+            compute_mdhash_id(content=dp['target_node'] + dp['source_node'], prefix="rel-"): {
+                "content": dp['edge_keyword'] + dp['source_node'] + dp['target_node'] + dp['edge_desc'],
+                "source_node": dp['source_node'],
+                "target_node": dp['target_node'],
+            }
+            for dp in all_relations_data
+        }
+        await relationship_vdb.upsert(data=data_for_vdb)
 
     return knowledge_graph_inst
 
