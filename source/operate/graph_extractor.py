@@ -113,7 +113,8 @@ async def _merge_nodes_then_upsert(
     already_entity_ids = []
     already_entity_descs = []
 
-    already_node = await knowledge_graph_inst.get_node(entity_name=entity_name)
+    already_node = await knowledge_graph_inst.get_node(node_id=entity_name)
+    
     
 
 
