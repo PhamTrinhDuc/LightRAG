@@ -117,7 +117,6 @@ class LightRAG:
             if not len(new_docs):
                 logger.warning("All docs are already in the storage")
                 return 
-            await self.full_docs_kv.upsert(data=new_docs)
 
             update_storage = True
             logger.info(f"[New docs] inserting {len(new_docs)} docs")
@@ -146,8 +145,6 @@ class LightRAG:
                 logger.warning("All chunks are already in the storage")
                 return
             
-            # Insert chunk to json data
-            await self.text_chunks_kv.upsert(data=inserting_chunks)
             # Insert chunk to vector database
             await self.chunks_vdb.upsert(data=inserting_chunks)
             logger.info(f"[New chunks] inserting {len(inserting_chunks)} chunks")
@@ -160,6 +157,13 @@ class LightRAG:
                 relationship_vdb=self.relationships_vdb,
                 global_config=asdict(self.config),
             )
+            if maybe_new_kg is not None:
+                logger.info("")
+                return
+            
+            self.chunk_entity_relation_graph = maybe_new_kg
+            await self.full_docs_kv.upsert(data=new_docs)
+            await self.text_chunks_kv.upsert(data=inserting_chunks)
         finally:
             if update_storage:
                 self._insert_callback_done()

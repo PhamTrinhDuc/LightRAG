@@ -103,8 +103,18 @@ async def _handle_single_relation_extraction(
     )
 
 
-async def _merge_nodes_then_upsert():
-    pass
+async def _merge_nodes_then_upsert(
+    entity_name: str,
+    list_entity: list[dict],
+    knowledge_graph_inst: BaseGraphStorage,
+    global_config: dict
+):
+    already_entity_types = []
+    already_entity_ids = []
+    already_entity_descs = []
+
+    already_node = await knowledge_graph_inst.get_node(entity_name=entity_name)
+    
 
 
 async def _merge_edges_then_upsert():
@@ -200,7 +210,6 @@ async def _process_single_content(
 
 
 async def extract_entities(
-    global_config: dict,
     chunks: dict[str, TextChunkSchema],
     knowledge_graph_inst: BaseGraphStorage,
     entity_vdb: BaseVectorStorage,
@@ -219,7 +228,10 @@ async def extract_entities(
         total=len(ordered_chunks)
     ):
         results.append(await result)
+
+    # entity name can correspond to multiple nodes
     maybe_nodes: dict[str, list[NodeSchema]]= defaultdict(list)
+    # (src_node, tgt_node) can correspond to multiple egdes
     maybe_edges: dict[str, list[EdgeSchema]] = defaultdict(list)
 
     for node, edge in results:

@@ -63,5 +63,9 @@ class BaseKVStorage(Generic[T], StorageNameSpace):
         raise NotImplementedError
     
 
+@dataclass
 class BaseGraphStorage(StorageNameSpace):
-    pass
+    
+    def get_node(entity_name: str):
+        """Get node data from graph using through entity_name"""
+        raise NotImplementedError

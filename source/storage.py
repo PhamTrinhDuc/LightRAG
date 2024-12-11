@@ -122,5 +122,13 @@ class NanoVectorStorage(BaseVectorStorage):
 
 
 class NetworkXStorage(BaseGraphStorage):
-    pass
+
+    def load_nx_graph(file_name: str) -> nx.Graph:
+        if os.path.exists(path=file_name):
+            return nx.read_graphml(file_name)
+        return None
+    
+
+    def get_node(entity_name: str):
+        pass
 
