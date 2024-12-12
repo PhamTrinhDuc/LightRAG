@@ -24,32 +24,9 @@ from common.utils import (
     clean_str,
     is_float_regex,
     compute_mdhash_id,
-    encode_string_by_tiktoken,
-    decode_tokens_by_tiktoken,
     format_to_openai_message,
     split_string_by_multi_markers
 )
-
-def chunking_by_token_size(content: str, 
-                           max_token_size: int = 1024, 
-                           overlap_token_size: int = 128, 
-                           tiktoken_model_name: str = "gpt-4o-mini") -> List[TextChunkSchema]:
-    tokens = encode_string_by_tiktoken(content=content, model_name=tiktoken_model_name)
-    print("Tokens: ", tokens) # list numerical
-    results = []
-    for idx, start in enumerate(range(0, len(tokens), max_token_size - overlap_token_size)):
-        chunk_content = decode_tokens_by_tiktoken(
-            tokens=tokens[start: start + max_token_size],
-            model_name=tiktoken_model_name
-        )
-        print("Chunk content: ", chunk_content) # list string
-        results.append({
-            "tokens": tokens, 
-            "content": chunk_content.strip(),
-            "chunk_order_index": idx
-        })
-    return results
-
 
 async def _handle_single_entity_extraction(
         record_attribute: list[str], # ['entity', 'Alex', 'person', 'description ...'] 
@@ -160,13 +137,6 @@ async def _merge_nodes_then_upsert(
 
     node_data["entity_name"] = entity_name
     return node_data
-
-
-    
-
-
-    
-    
 
 
 async def _merge_edges_then_upsert(

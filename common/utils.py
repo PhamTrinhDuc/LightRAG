@@ -96,6 +96,27 @@ def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini") -> 
     return tokens
 
 
+def chunking_by_token_size(content: str, 
+                           max_token_size: int = 1024, 
+                           overlap_token_size: int = 128, 
+                           tiktoken_model_name: str = "gpt-4o-mini"):
+    tokens = encode_string_by_tiktoken(content=content, model_name=tiktoken_model_name)
+    print("Tokens: ", tokens) # list numerical
+    results = []
+    for idx, start in enumerate(range(0, len(tokens), max_token_size - overlap_token_size)):
+        chunk_content = decode_tokens_by_tiktoken(
+            tokens=tokens[start: start + max_token_size],
+            model_name=tiktoken_model_name
+        )
+        print("Chunk content: ", chunk_content) # list string
+        results.append({
+            "tokens": tokens, 
+            "content": chunk_content.strip(),
+            "chunk_order_index": idx
+        })
+    return results
+
+
 def format_to_openai_message(prompt: str, response: str):
     """Format prompt and response to form openai message"""
     return [

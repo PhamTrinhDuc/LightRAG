@@ -16,10 +16,7 @@ from source.operate.query import (
     global_query
 )
 
-from source.operate.graph_extractor import (
-    extract_entities, 
-    chunking_by_token_size
-)
+from source.operate.graph_extractor import extract_entities
 
 from common.base import (
     BaseKVStorage, 
@@ -32,6 +29,7 @@ from common.utils import (
     logger,
     set_logger, 
     compute_mdhash_id,
+    chunking_by_token_size
 )
 
 @dataclass
