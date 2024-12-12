@@ -7,6 +7,7 @@ from nano_vectordb import NanoVectorDB
 from typing import Dict, Any
 from common.utils import logger
 from common.base import BaseVectorStorage
+from common.schema import EntitySchema, RelationSchema
 
 
 @dataclass
@@ -24,7 +25,7 @@ class NanoVectorStorage(BaseVectorStorage):
         )
         self.cosine_threshold = self.global_config.get('cosine_threshold', self.cosine_threshold)
 
-    async def upsert(self, data: Dict[str, Dict[str, Any]]):
+    async def upsert(self, data: Dict[str, EntitySchema | RelationSchema]):
         logger.info(f"Inserting {len(data)} vectors to {self.namespace}")
         if not len(data):
             logger.warning("You insert an empty data to vector DB")

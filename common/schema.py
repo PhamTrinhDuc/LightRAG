@@ -22,8 +22,8 @@ EntitySchema = TypedDict( # schema for entity to save in VectoDB
 RelationSchema = TypedDict(
     "RelationSchema",
     {
-        "src_id": str,
-        "tgt_id": str,
+        "source_node": str,
+        "target_node": str,
         "content": str
     }
 )

@@ -317,7 +317,7 @@ async def extract_entities(
 
     # store entities and relationships to vector database ======================================
     if entity_vdb is not None: # for entity
-        data_for_vdb = {
+        data_for_vdb: EntitySchema = {
             compute_mdhash_id(content=dp['entity_name'], prefix="ent-"): {
                 "entity_name": dp['entity_name'],
                 "content": dp['entity_name'] + dp['entity_desc']
@@ -327,7 +327,7 @@ async def extract_entities(
         await entity_vdb.upsert(data=data_for_vdb)
 
     if relationship_vdb is not None: # for relationship
-        data_for_vdb = {
+        data_for_vdb: RelationSchema = {
             compute_mdhash_id(content=dp['target_node'] + dp['source_node'], prefix="rel-"): {
                 "content": dp['edge_keyword'] + dp['source_node'] + dp['target_node'] + dp['edge_desc'],
                 "source_node": dp['source_node'],
