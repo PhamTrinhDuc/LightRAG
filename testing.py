@@ -25,7 +25,7 @@ async def main():
     # res = await rag.full_docs.filter_keys(data=['a', 'b', 'c'])
     # print(res)
     # ====================================================================================
-    # test tokenizer 
+    # test tokenzer, encode, decode 
     # content = """while Alex clenched his jaw, the buzz of frustration dull against the backdrop of Taylor's authoritarian certainty. 
     # It was this competitive undercurrent that kept him alert, the sense that his and Jordan's shared commitment to discovery was an unspoken rebellion against Cruz's narrowing vision of control and order.
     # Then Taylor did something unexpected. They paused beside Jordan and, for a moment, observed the device with something akin to reverence. “If this tech can be understood..." 
@@ -39,6 +39,4 @@ async def main():
     print(response)
 if __name__ == "__main__":
     asyncio.run(main())
-    # main()
-
 

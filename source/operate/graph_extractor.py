@@ -4,7 +4,7 @@ from typing import List
 from collections import Counter, defaultdict
 from tqdm.asyncio import tqdm as tqdm_async
 from typing import Dict, Tuple
-from source.prompt import PROMPTS
+from source.prompt import PROMPTS, GRAPH_FIELD_SEP
 from common.base import (
     BaseGraphStorage, 
     BaseVectorStorage, 
@@ -35,14 +35,14 @@ def chunking_by_token_size(content: str,
                            overlap_token_size: int = 128, 
                            tiktoken_model_name: str = "gpt-4o-mini") -> List[TextChunkSchema]:
     tokens = encode_string_by_tiktoken(content=content, model_name=tiktoken_model_name)
-    # print("Tokens: ", tokens) # list numerical
+    print("Tokens: ", tokens) # list numerical
     results = []
     for idx, start in enumerate(range(0, len(tokens), max_token_size - overlap_token_size)):
         chunk_content = decode_tokens_by_tiktoken(
             tokens=tokens[start: start + max_token_size],
             model_name=tiktoken_model_name
         )
-        # print("Chunk content: ", chunk_content) # list string
+        print("Chunk content: ", chunk_content) # list string
         results.append({
             "tokens": tokens, 
             "content": chunk_content.strip(),
@@ -103,22 +103,78 @@ async def _handle_single_relation_extraction(
     )
 
 
+async def _hanle_entity_relation_summary():
+    pass 
+
 async def _merge_nodes_then_upsert(
     entity_name: str,
-    list_entity: list[dict],
+    list_entity: List[NodeSchema],
     knowledge_graph_inst: BaseGraphStorage,
     global_config: dict
-):
+) -> NodeSchema:
+    """
+    Get current node from graph based on the specific entity_name
+    Get list of available nodes from graph after merge current node with list nodes
+    Args: 
+
+    Return:
+        list nodes after merged
+    """
     already_entity_types = []
     already_entity_ids = []
     already_entity_descs = []
 
-    already_node = await knowledge_graph_inst.get_node(node_id=entity_name)
+    already_node: dict = await knowledge_graph_inst.get_node(node_id=entity_name)
+    # get infor from current node
+    if already_node is not None:
+        already_entity_types.append(already_node['entity_type'])
+        already_entity_descs.append(already_node['entity_desc'])
+        already_entity_ids.extend(
+            split_string_by_multi_markers(
+                content=already_node['entity_source_id'],
+                markers=[GRAPH_FIELD_SEP]
+            )
+        )
+    
+    # start merge
+    entity_type = sorted(
+        Counter(
+            [dp['entity_type'] for dp in list_entity] + already_entity_types 
+        ).items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[0][0]
+    entity_desc = GRAPH_FIELD_SEP.join(set([dp['entity_dsc'] for dp in list_entity] + already_entity_descs))
+    entity_id = GRAPH_FIELD_SEP.join(set([dp['entity_source_id'] for dp in list_entity] + already_entity_ids))
+    entity_desc_summary = await _hanle_entity_relation_summary()
+
+    # update node
+    node_data = dict(
+        entity_type = entity_type,
+        entity_desc = entity_desc_summary,
+        entity_source_id = entity_id
+    ) 
+
+    # update to graph
+    await knowledge_graph_inst.upsert_node(node_id=entity_name, node_data=node_data)
+
+    node_data["entity_name"] = entity_name
+    return node_data
+
+
+    
+
+
     
     
 
 
-async def _merge_edges_then_upsert():
+async def _merge_edges_then_upsert(
+        source_node_id: str,
+        target_node_id: str,
+        edges_data: List[dict],
+        knowledge_graph_inst: BaseGraphStorage,
+        global_config: dict):
     pass
 
 
@@ -211,6 +267,7 @@ async def _process_single_content(
 
 
 async def extract_entities(
+    global_config: dict,
     chunks: dict[str, TextChunkSchema],
     knowledge_graph_inst: BaseGraphStorage,
     entity_vdb: BaseVectorStorage,
@@ -223,16 +280,18 @@ async def extract_entities(
     ordered_chunks = list(chunks.items())
 
     for result in tqdm_async(
-        iterable=asyncio.as_completed([_process_single_content(chunk) for chunk in ordered_chunks]),
+        iterable=asyncio.as_completed([_process_single_content(chunk_key_dp=chunk, 
+                                                               global_config=global_config) 
+                                                               for chunk in ordered_chunks]),
         desc="Extracting entities from chunks",
         unit="chunk",
         total=len(ordered_chunks)
     ):
         results.append(await result)
 
-    # entity name can correspond to multiple nodes
+    # a entity name can correspond to multiple nodes
     maybe_nodes: dict[str, list[NodeSchema]]= defaultdict(list)
-    # (src_node, tgt_node) can correspond to multiple egdes
+    # a (src_node, tgt_node) can correspond to multiple egdes
     maybe_edges: dict[str, list[EdgeSchema]] = defaultdict(list)
 
     for node, edge in results:
@@ -248,7 +307,9 @@ async def extract_entities(
     all_entities_data: list[NodeSchema] = [] # for entities
     for result in tqdm_async(
         iterable=asyncio.as_completed(
-            _merge_nodes_then_upsert() 
+            _merge_nodes_then_upsert(entity_name=k, list_entity=v, 
+                                     knowledge_graph_inst=knowledge_graph_inst, 
+                                     global_config=global_config) # merge nodes after upsert nodes to graph
             for k, v in maybe_nodes
         ),
         desc="Inserting entities",
@@ -267,7 +328,9 @@ async def extract_entities(
     all_relations_data: list[EdgeSchema] = [] # for relationships
     for result in tqdm_async(
         iterable=asyncio.as_completed(
-            _merge_edges_then_upsert()
+            _merge_edges_then_upsert(source_node_id=k[0], target_node_id=k[1], edges_data=v, 
+                                     knowledge_graph_inst=knowledge_graph_inst,
+                                     global_config=global_config) # merge edges after upsert edges to graph
             for k, v in maybe_edges
         ),
         total=len(maybe_edges),

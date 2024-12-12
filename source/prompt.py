@@ -1,6 +1,5 @@
 GRAPH_FIELD_SEP = "<SEP>"
 
-
 PROMPTS = {}
 
 PROMPTS["DEFAULT_LANGUAGE"] = "English"

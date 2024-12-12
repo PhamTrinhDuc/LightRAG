@@ -80,7 +80,7 @@ def compute_mdhash_id(content: str, prefix: str = ""):
     return prefix + md5(content.encode()).hexdigest()
 
 
-def decode_tokens_by_tiktoken(tokens: list[int], model_name: str = "gpt-4o-mini"):
+def decode_tokens_by_tiktoken(tokens: list[int], model_name: str = "gpt-4o-mini") -> str:
     global ENCODER
     if ENCODER is None:
         ENCODER = tiktoken.encoding_for_model(model_name=model_name)
@@ -88,7 +88,7 @@ def decode_tokens_by_tiktoken(tokens: list[int], model_name: str = "gpt-4o-mini"
     return content
 
 
-def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini"):
+def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini") -> List[int]:
     global ENCODER
     if ENCODER is None:
         ENCODER = tiktoken.encoding_for_model(model_name=model_name)

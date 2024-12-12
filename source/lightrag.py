@@ -9,7 +9,7 @@ from typing import Union, List, Dict, Any
 
 from config import ConfigParams
 
-from operate.query import (
+from source.operate.query import (
     local_query,
     naive_query,
     hybrid_query,
@@ -161,7 +161,7 @@ class LightRAG:
                 logger.info("")
                 return
             
-            self.chunk_entity_relation_graph = maybe_new_kg
+            self.chunk_entity_relation_graph = maybe_new_kg # Temporarily do not use graph here
             await self.full_docs_kv.upsert(data=new_docs)
             await self.text_chunks_kv.upsert(data=inserting_chunks)
         finally:
