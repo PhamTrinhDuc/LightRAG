@@ -13,20 +13,6 @@ __pycache__/
 # C extensions
 *.so
 
-# log files
-error
-terminal
-times
-# private
-security
-conversation_storage
-
-# data
-data_text
-vector_db
-data_detail_superapp
-
-
 # Distribution / packaging
 .Python
 build/
