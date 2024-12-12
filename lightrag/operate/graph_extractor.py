@@ -4,7 +4,7 @@ from typing import List
 from collections import Counter, defaultdict
 from tqdm.asyncio import tqdm as tqdm_async
 from typing import Dict, Tuple
-from source.prompt import PROMPTS, GRAPH_FIELD_SEP
+from lightrag.prompt import PROMPTS, GRAPH_FIELD_SEP
 from common.base import (
     BaseGraphStorage, 
     BaseVectorStorage, 

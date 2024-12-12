@@ -9,14 +9,14 @@ from typing import Union, List, Dict, Any
 
 from config import ConfigParams
 
-from source.operate.query import (
+from lightrag.operate.query import (
     local_query,
     naive_query,
     hybrid_query,
     global_query
 )
 
-from source.operate.graph_extractor import extract_entities
+from lightrag.operate.graph_extractor import extract_entities
 
 from common.base import (
     BaseKVStorage, 
