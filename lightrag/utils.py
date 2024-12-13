@@ -16,7 +16,6 @@ import xml.etree.ElementTree as ET
 
 ENCODER = None
 
-
 logger = logging.getLogger("lightrag")
 
 def set_logger(log_file: str):
@@ -155,6 +154,16 @@ def is_float_regex(value):
     return bool(re.match(r"^[-+]?[0-9]*\.?[0-9]+$", value))
 
 
+class UnlimitedSemaphore:
+    """A context manager that allows unlimited access."""
+
+    async def __aenter__(self):
+        pass
+
+    async def __aexit__(self, exc_type, exc, tb):
+        pass
+    
+    
 @dataclass 
 class EmbeddingFunc:
     """
@@ -171,9 +180,15 @@ class EmbeddingFunc:
     embedding_dim: int
     max_token: int
     func: callable
-
+    concurrent_limit: int = 16
+    def __post_init__(self):
+        if self.concurrent_limit != 0:
+            self._semaphone = asyncio.Semaphore(value=self.concurrent_limit)
+        else:
+            self._semaphone = UnlimitedSemaphore()
     async def __call__(self, *args, **kawrgs) -> np.ndarray:
-        return await self.func(*args, **kawrgs)
+        async with self._semaphone:
+            return await self.func(*args, **kawrgs)
     
     
 def wrap_embedding_func_with_attrs(**kwargs):

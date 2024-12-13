@@ -5,9 +5,9 @@ from tqdm.asyncio import tqdm as tqdm_async
 from dataclasses import dataclass
 from nano_vectordb import NanoVectorDB
 from typing import Dict, Any
-from common.utils import logger
-from common.base import BaseVectorStorage
-from common.schema import EntitySchema, RelationSchema
+from lightrag.utils import logger
+from lightrag.base import BaseVectorStorage
+from lightrag.schemas import EntitySchema, RelationSchema
 
 
 @dataclass

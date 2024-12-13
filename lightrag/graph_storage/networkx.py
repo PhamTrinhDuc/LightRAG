@@ -2,8 +2,8 @@
 import os
 import networkx as nx
 from typing import List, Union, Tuple
-from common.utils import logger
-from common.base import BaseGraphStorage
+from lightrag.utils import logger
+from lightrag.base import BaseGraphStorage
 
 
 class NetworkXStorage(BaseGraphStorage):

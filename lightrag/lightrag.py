@@ -18,14 +18,14 @@ from lightrag.operate.query import (
 
 from lightrag.operate.graph_extractor import extract_entities
 
-from common.base import (
+from lightrag.base import (
     BaseKVStorage, 
     BaseVectorStorage,
     BaseGraphStorage,
     StorageNameSpace
 )
 
-from common.utils import (
+from lightrag.utils import (
     logger,
     set_logger, 
     compute_mdhash_id,

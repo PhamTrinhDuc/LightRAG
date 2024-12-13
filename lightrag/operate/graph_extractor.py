@@ -5,13 +5,13 @@ from collections import Counter, defaultdict
 from tqdm.asyncio import tqdm as tqdm_async
 from typing import Dict, Tuple
 from lightrag.prompt import PROMPTS, GRAPH_FIELD_SEP
-from common.base import (
+from lightrag.base import (
     BaseGraphStorage, 
     BaseVectorStorage, 
     BaseKVStorage,
 )
 
-from common.schema import (
+from lightrag.schemas import (
     TextChunkSchema, 
     NodeSchema, 
     EdgeSchema,
@@ -19,7 +19,7 @@ from common.schema import (
     RelationSchema,
 )
 
-from common.utils import (
+from lightrag.utils import (
     logger,
     clean_str,
     is_float_regex,

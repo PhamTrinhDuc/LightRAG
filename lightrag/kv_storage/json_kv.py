@@ -1,8 +1,8 @@
 import os
 from dataclasses import dataclass
 from typing import List, Dict, Any
-from common.utils import load_json, write_json, logger
-from common.base import BaseKVStorage
+from lightrag.utils import load_json, write_json, logger
+from lightrag.base import BaseKVStorage
 
 @dataclass
 class JsonKVStorage(BaseKVStorage):
