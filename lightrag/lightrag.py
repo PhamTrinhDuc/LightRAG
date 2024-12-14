@@ -60,11 +60,13 @@ class LightRAG:
                 embedding_func=None
             ) if self.enable_llm_cache else None
         )
+
         self.full_docs_kv = self.json_kv_storage_cls(
             namespace="full_docs",
             global_config=asdict(self.config),
             embedding_func=self.config.embedding_func,
         )        
+        
         self.text_chunks_kv = self.json_kv_storage_cls(
             namespace="text_chunks",
             global_config=asdict(self.config),

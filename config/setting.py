@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from lightrag.utils import EmbeddingFunc, convert_response_to_json, logger
-from lightrag.storage import JsonKVStorage, NanoVectorStorage, NetworkXStorage
+from lightrag.kv_storage import JsonKVStorage
+from lightrag.graph_storage import NetworkXStorage
+from lightrag.vectorstore import NanoVectorStorage
 from lightrag.llms import openai_complete_if_cache
 from lightrag.embeddings import openai_embedding
 
@@ -24,7 +26,7 @@ class ConfigParams:
         default_factory= lambda: f"./lightrag_cache_{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
     )
 
-    #text chunk 
+    # text chunk 
     chunk_token_size: int = 1200
     chunk_overlap_token_size: int = 200
     tiktoken_model_name: str = "gpt-4o-mini"
