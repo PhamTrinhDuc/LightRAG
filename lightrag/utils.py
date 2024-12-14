@@ -51,7 +51,7 @@ def write_json(json_obj: dict, file_name: str):
         json.dump(json_obj, f, ensure_ascii=False, indent=4)
 
 
-def compute_args_has(*args):
+def compute_args_hash(*args):
     """
     Chuyển các đối sô thành 1 chuỗi. Mã hóa chuỗi thành dạng byte sử dụng encode() với mã hóa utf-8..
     Tính toán hash MD5  của chuỗi byte đã mã hóa sử dụng hàm md5() từ thư viện hashlib.

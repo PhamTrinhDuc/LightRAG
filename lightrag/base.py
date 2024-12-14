@@ -1,8 +1,32 @@
 from dataclasses import dataclass, field
-from typing import Union, Generic, TypeVar, List, Dict, Tuple
+from typing import Union, Generic, TypeVar, List, Dict, Tuple, Literal
 from lightrag.utils import EmbeddingFunc
 from abc import ABC, abstractmethod
+
+
 T = TypeVar("T")
+
+@dataclass
+class QueryParam:
+    # mode query
+    mode: Literal['naive', 'local', 'global', 'hybrid'] = "global"
+    # just return context
+    only_need_context: bool = False
+    # just return prompt 
+    only_need_prompt: bool = False
+    response_type: str = "Mutiple Paragraphs"
+    stream: bool = False
+    # Number of top-k items to retrieve; corresponds to entities in "local" mode and relationships in "global" mode.
+    top_k:int = 60
+    # Number of document chunks to retrieve.
+    # top_n: int = 10
+    # Number of tokens for the original chunks.
+    max_token_for_text_unit: int = 4000
+    # Number of tokens for the relationship descriptions
+    max_token_for_global_context: int = 4000
+    # Number of tokens for the entity descriptions
+    max_token_for_local_context: int = 4000
+
 
 @dataclass
 class StorageNameSpace(ABC):

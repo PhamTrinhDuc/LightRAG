@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from lightrag.utils import EmbeddingFunc, convert_response_to_json, logger
-from lightrag.kv_storage import JsonKVStorage
-from lightrag.graph_storage import NetworkXStorage
+from lightrag.kvstore import JsonKVStorage
+from lightrag.graphstore import NetworkXStorage
 from lightrag.vectorstore import NanoVectorStorage
 from lightrag.llms import openai_complete_if_cache
 from lightrag.embeddings import openai_embedding

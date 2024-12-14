@@ -16,7 +16,7 @@ from lightrag.operate.query import (
     global_query
 )
 
-from lightrag.operate.graph_extractor import extract_entities
+from lightrag.operate import extract_entities
 
 from lightrag.base import (
     BaseKVStorage, 
@@ -66,7 +66,7 @@ class LightRAG:
             global_config=asdict(self.config),
             embedding_func=self.config.embedding_func,
         )        
-        
+
         self.text_chunks_kv = self.json_kv_storage_cls(
             namespace="text_chunks",
             global_config=asdict(self.config),
