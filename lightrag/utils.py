@@ -9,10 +9,10 @@ import re
 import numpy as np
 import tiktoken
 from dataclasses import dataclass
+import xml.etree.ElementTree as ET
 from functools import wraps
 from hashlib import md5
 from typing import Any, Union, List
-import xml.etree.ElementTree as ET
 
 ENCODER = None
 
@@ -124,7 +124,7 @@ def format_to_openai_message(prompt: str, response: str):
     ]
 
 
-def split_string_by_multi_markers(content: str, markers: list[str]) -> list[str]:
+def split_string_by_multi_markers(content: str, markers: Union[str, list[str]]) -> list[str]:
     """Split string by multiple markers
     Example: 
         content = "apple,banana;orange:grape"
@@ -133,6 +133,10 @@ def split_string_by_multi_markers(content: str, markers: list[str]) -> list[str]
     """
     if not markers:
         return [content]
+    
+    if not isinstance(markers, list):
+        markers = list[markers]
+        
     # print("|".join(re.escape(marker) for marker in markers)) # ,|;|:
     results = re.split(pattern="|".join(re.escape(marker) for marker in markers), string=content)
     return results

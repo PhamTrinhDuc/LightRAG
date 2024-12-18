@@ -34,7 +34,10 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 )
 async def openai_complete_if_cache(
     prompt: str,
-    model: Literal["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo", "gpt-4-turbo"] = "gpt-4o-mini",
+    model: Literal["gpt-4o-mini", 
+                   "gpt-4o", 
+                   "gpt-3.5-turbo", 
+                   "gpt-4-turbo"] = "gpt-4o-mini",
     system_prompt: str = None,
     history_messages: List =  [],
     base_url: str = None,

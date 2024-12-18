@@ -29,7 +29,7 @@ RelationSchema = TypedDict(
 )
 
 NodeSchema = TypedDict( # schema for node to save in Network Graph
-    "NodeSchema",
+    "NodeSchema", 
     {
         "entity_name": str,
         "entity_type": str,

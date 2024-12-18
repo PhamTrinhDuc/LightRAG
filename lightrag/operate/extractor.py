@@ -25,7 +25,9 @@ from lightrag.utils import (
     is_float_regex,
     compute_mdhash_id,
     format_to_openai_message,
-    split_string_by_multi_markers
+    split_string_by_multi_markers,
+    decode_tokens_by_tiktoken,
+    encode_string_by_tiktoken
 )
 
 async def _handle_single_entity_extraction(
@@ -80,8 +82,37 @@ async def _handle_single_relation_extraction(
     )
 
 
-async def _hanle_entity_relation_summary():
-    pass 
+async def _handle_entity_relation_summary(
+    entity_or_relation_name: str,
+    description: str,
+    global_config: dict
+) -> str:
+    
+    llm_func: callable = global_config['llm_model_func']
+    llm_max_tokens: int = global_config['llm_model_max_token']
+    tiktoken_model: str = global_config['tiktoken_model_name']
+    summary_max_tokens: int = global_config['entity_summary_to_max_tokens']
+    language: str = global_config['addon_params'].get("language", PROMPTS["DEFAULT_LANGUAGE"])
+
+    tokens_summary = encode_string_by_tiktoken(content=description, model_name=tiktoken_model)
+    if len(tokens_summary) < summary_max_tokens:
+        return description
+    
+    desc_decode = decode_tokens_by_tiktoken(tokens=tokens_summary[:llm_max_tokens], model_name=tiktoken_model)
+    desc_decode = split_string_by_multi_markers(
+        content=desc_decode,
+        markers=GRAPH_FIELD_SEP
+    )
+    prompt_template = PROMPTS['summarize_entity_descriptions']
+    context_base = dict(
+        language = language,
+        entity_name = entity_or_relation_name,
+        description_list = desc_decode.split(GRAPH_FIELD_SEP)
+    )
+    prompt = prompt_template.format(**context_base)
+    logger.debug(f"Trigger summary: {entity_or_relation_name}")
+    response_summary = await llm_func(prompt=prompt, max_tokens=summary_max_tokens)
+    return response_summary
 
 async def _merge_nodes_then_upsert(
     entity_name: str,
@@ -109,7 +140,7 @@ async def _merge_nodes_then_upsert(
         already_entity_ids.extend(
             split_string_by_multi_markers(
                 content=already_node['entity_source_id'],
-                markers=[GRAPH_FIELD_SEP]
+                markers=GRAPH_FIELD_SEP
             )
         )
     
@@ -121,16 +152,16 @@ async def _merge_nodes_then_upsert(
         key=lambda x: x[1],
         reverse=True
     )[0][0]
-    entity_desc = GRAPH_FIELD_SEP.join(set([dp['entity_dsc'] for dp in list_entity] + already_entity_descs))
-    entity_id = GRAPH_FIELD_SEP.join(set([dp['entity_source_id'] for dp in list_entity] + already_entity_ids))
-    entity_desc_summary = await _hanle_entity_relation_summary()
+    entity_desc: str = GRAPH_FIELD_SEP.join(set([dp['entity_dsc'] for dp in list_entity] + already_entity_descs))
+    entity_id: str = GRAPH_FIELD_SEP.join(set([dp['entity_source_id'] for dp in list_entity] + already_entity_ids))
+    entity_desc_summary: str = await _handle_entity_relation_summary()
 
     # update node
     node_data = dict(
         entity_type = entity_type,
         entity_desc = entity_desc_summary,
         entity_source_id = entity_id
-    ) 
+    )
 
     # update to graph
     await knowledge_graph_inst.upsert_node(node_id=entity_name, node_data=node_data)
@@ -144,8 +175,73 @@ async def _merge_edges_then_upsert(
         target_node_id: str,
         edges_data: List[dict],
         knowledge_graph_inst: BaseGraphStorage,
-        global_config: dict):
-    pass
+        global_config: dict) -> EdgeSchema:
+    
+    already_weights = []
+    already_source_ids = []
+    already_descs = []
+    already_keywords = []
+
+    if await knowledge_graph_inst.has_edge(src_node_id=source_node_id, 
+                                           tgt_node_id=target_node_id):
+        
+        already_edge = await knowledge_graph_inst.get_edge(src_node_id=source_node_id, 
+                                                           tgt_node_id=target_node_id)
+        
+        already_weights.append(already_edge['edge_weight'])
+        already_source_ids.extend(split_string_by_multi_markers(content=already_edge['edge_source_id'], 
+                                                                markers=GRAPH_FIELD_SEP))
+        already_descs.append(already_edge['edge_desc'])
+        already_keywords.extend(split_string_by_multi_markers(content=already_edge['edge_keyword'], 
+                                                              markers=GRAPH_FIELD_SEP))
+        
+    edge_weight = sum(already_weights + [edge ['edge_weight'] for edge in edges_data])
+    edge_description = GRAPH_FIELD_SEP.join(
+        already_descs + set([edge['edge_desc'] for edge in edges_data])
+    )
+    edge_keyword = GRAPH_FIELD_SEP.join(
+        already_keywords + set([edge['edge_keyword'] for edge in edges_data])
+    )
+    edge_source_id = GRAPH_FIELD_SEP.join(
+        already_source_ids + set([edge['edge_source_id'] for edge in edges_data])
+    )
+
+    # process node of edge
+    for is_need_insert in [target_node_id, source_node_id]:
+        if not (await knowledge_graph_inst.has_node(is_need_insert)):
+            knowledge_graph_inst.upsert_node(
+                node_id=is_need_insert,
+                node_data= {
+                    "entity_type": "UNKNOW",
+                    "entity_name": "UNKNOW",
+                    "entity_desc": edge_description,
+                    "entity_source_id": edge_source_id
+                }
+            )
+
+    desc_edge_summary = _handle_entity_relation_summary(entity_or_relation_name=f"({source_node_id}, {target_node_id})",
+                                                   description=edge_description,
+                                                   global_config=global_config)
+    await knowledge_graph_inst.upsert_edge(
+        src_node_id=source_node_id,
+        tgt_node_id=target_node_id,
+        edge_data= dict(
+            edge_desc = desc_edge_summary,
+            edge_keyword = edge_keyword,
+            edge_weight = edge_weight,
+            edge_source_id = edge_source_id
+        )
+    )
+
+    edge_data = dict(
+        source_node = source_node_id,
+        target_node = target_node_id,
+        edge_desc = desc_edge_summary,
+        edge_keyword = edge_keyword,
+        edge_weight = edge_weight,
+        edge_source_id = edge_source_id
+    )
+    return edge_data
 
 
 async def _process_single_content(
@@ -197,7 +293,7 @@ async def _process_single_content(
     maybe_edges: dict[tuple[str, str], list[EdgeSchema]] = defaultdict(list)
 
     for record in records:
-        record = re.search(r"\((.*)\)", record) # see in 'entity_extraction' PROMPT to understand 
+        record = re.search(r"\((.*)\)", record) # get text in '()' (see in 'entity_extraction' PROMPT to understand) 
         if record is None:
             continue
 
@@ -205,7 +301,7 @@ async def _process_single_content(
         record_attribute: list[str] = split_string_by_multi_markers(
             content=record,
             markers=[context_base['tuple_delimiter']]
-        ) # see in 'entity_extraction' PROMPT to understand 
+        ) # see in 'entity_extraction_examples' PROMPT to understand 
 
         if_entities: NodeSchema = await _handle_single_entity_extraction(
             record_attribute=record_attribute,
