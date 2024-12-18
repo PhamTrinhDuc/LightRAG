@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="edge_source_id" attr.type="string"/>
+<key id="d5" for="edge" attr.name="edge_weight" attr.type="string"/>
+<key id="d4" for="edge" attr.name="edge_keyword" attr.type="string"/>
+<key id="d3" for="edge" attr.name="edge_desc" attr.type="string"/>
+<key id="d2" for="node" attr.name="entity_source_id" attr.type="string"/>
+<key id="d1" for="node" attr.name="entity_desc" attr.type="string"/>
+<key id="d0" for="node" attr.name="entity_type" attr.type="string"/>
+<graph edgedefault="undirected"><node id="Eren">
+  <data key="d0">person</data>
+  <data key="d1">Eren là bạn của Armin và Mikasa, cậu luôn có ước mơ được tự do</data>
+  <data key="d2">1</data>
+</node>
+<node id="Mikasa">
+  <data key="d0">person</data>
+  <data key="d1">Mikasa là bạn của Eren và Armin, cậu được nhận nuôi bời gia đình của Eren</data>
+  <data key="d2">1</data>
+</node>
+<node id="Armin">
+  <data key="d0">person</data>
+  <data key="d1">Armin là bạn của Eren và Mikasa, cậu là người tuy nhút nhát nhưng lại rất thông minh</data>
+  <data key="d2">1</data>
+</node>
+<edge source="Eren" target="Mikasa">
+  <data key="d3">Eren là bạn của Mikasa</data>
+  <data key="d4">friend</data>
+  <data key="d5">10</data>
+  <data key="d6">1</data>
+</edge>
+<edge source="Eren" target="Armin">
+  <data key="d3">Eren là bạn của Armin</data>
+  <data key="d4">friend</data>
+  <data key="d5">9</data>
+  <data key="d6">1</data>
+</edge>
+<edge source="Mikasa" target="Armin">
+  <data key="d3">Armin là bạn của Mikasa</data>
+  <data key="d4">friend</data>
+  <data key="d5">9</data>
+  <data key="d6">1</data>
+</edge>
+</graph></graphml>

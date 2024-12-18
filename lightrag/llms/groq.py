@@ -15,7 +15,7 @@ from tenacity import (
     retry_if_exception_type
 )
 from lightrag.base import BaseKVStorage
-from lightrag.utils import compute_args_has
+from lightrag.utils import compute_args_hash
 
 
 
@@ -56,7 +56,7 @@ async def groq_complete_if_cache(
         })
     hashing_kv: BaseKVStorage = kwargs.get("hasing_kv", None)
     if hashing_kv is not None:
-        id_hash = compute_args_has(model, messages)
+        id_hash = compute_args_hash(model, messages)
         if_cache_return = await hashing_kv.get_by_id(id=id_hash)
         if if_cache_return is not None:
             return if_cache_return['response']

@@ -29,7 +29,7 @@ class QueryParam:
 
 
 @dataclass
-class StorageNameSpace(ABC):
+class StorageNameSpace:
     """
     StorageNameSpace là một lớp đại diện cho không gian lưu trữ với các cấu hình toàn cục.
     Attributes:
@@ -43,12 +43,10 @@ class StorageNameSpace(ABC):
     namespace: str
     global_config: dict
 
-    @abstractmethod
     async def index_done_callback(self):
         "commit the storage operations after indexing"
         pass
 
-    @abstractmethod
     async def query_done_callback(self):
         "commit the storage operations after querying"
         pass
@@ -98,6 +96,7 @@ class BaseKVStorage(Generic[T], StorageNameSpace, ABC):
 
 @dataclass
 class BaseGraphStorage(StorageNameSpace, ABC):
+    embedding_func: EmbeddingFunc = None
     
     @abstractmethod
     async def has_node(self, node_id: str) -> bool:
@@ -107,6 +106,11 @@ class BaseGraphStorage(StorageNameSpace, ABC):
     @abstractmethod
     async def has_edge(self, src_node_id: str, tgt_node_id: str) -> bool:
         """Check if edge exists from src_node and tgt_node"""
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def get_all_nodes(self):
+        """Get all nodes from graph"""
         raise NotImplementedError
     
     @abstractmethod
@@ -127,6 +131,11 @@ class BaseGraphStorage(StorageNameSpace, ABC):
     @abstractmethod
     async def get_edge(self, src_node_id: str, tgt_node_id: str)-> Union[dict, None]:
         """Get edge from graph through src_node_id and tgt_node_id"""
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def get_all_edges(self):
+        """Get all edges from graph"""
         raise NotImplementedError
     
     @abstractmethod

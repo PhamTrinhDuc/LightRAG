@@ -1,7 +1,7 @@
 from typing import List
 import ollama
 from lightrag.base import BaseKVStorage
-from lightrag.utils import compute_args_has
+from lightrag.utils import compute_args_hash
 
 
 
@@ -29,7 +29,7 @@ async def ollama_model_if_cache(
     
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
     if hashing_kv is not None: 
-        id_has = compute_args_has(model, messages)
+        id_has = compute_args_hash(model, messages)
         if_return_cache = hashing_kv.get_by_id(id_has)
         if if_return_cache is not None:
             return if_return_cache['response']

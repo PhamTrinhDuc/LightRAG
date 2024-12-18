@@ -94,6 +94,7 @@ async def _handle_entity_relation_summary(
     summary_max_tokens: int = global_config['entity_summary_to_max_tokens']
     language: str = global_config['addon_params'].get("language", PROMPTS["DEFAULT_LANGUAGE"])
 
+    # encode to token -> check if < summary tokens -> decode -> create prompt -> response
     tokens_summary = encode_string_by_tiktoken(content=description, model_name=tiktoken_model)
     if len(tokens_summary) < summary_max_tokens:
         return description
@@ -113,6 +114,7 @@ async def _handle_entity_relation_summary(
     logger.debug(f"Trigger summary: {entity_or_relation_name}")
     response_summary = await llm_func(prompt=prompt, max_tokens=summary_max_tokens)
     return response_summary
+
 
 async def _merge_nodes_then_upsert(
     entity_name: str,

@@ -5,7 +5,7 @@ from typing import List
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from lightrag.base import BaseKVStorage
-from lightrag.utils import compute_args_has
+from lightrag.utils import compute_args_hash
 
 @lru_cache(maxsize=1)
 async def hf_model_if_cache(
@@ -38,7 +38,7 @@ async def hf_model_if_cache(
     
     hashing_kv: BaseKVStorage = kwargs.get("hashing_kv", None)
     if hashing_kv is not None:
-        id_hash = compute_args_has(model, messages)
+        id_hash = compute_args_hash(model, messages)
         if_cache_return = hashing_kv.get_by_id(id_hash)
         if if_cache_return is not None:
             return if_cache_return['response']
