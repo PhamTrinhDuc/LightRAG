@@ -50,26 +50,8 @@ class StorageNameSpace:
     async def query_done_callback(self):
         "commit the storage operations after querying"
         pass
-
-
-@dataclass
-class BaseVectorStorage(StorageNameSpace, ABC):
-    embedding_func: EmbeddingFunc
-    meta_fields: set = field(default_factory=set)
-
-    @abstractmethod
-    async def query(self, query: str, top_k: int) -> List[dict]:
-        raise NotImplementedError
     
-    @abstractmethod
-    async def upsert(self, data: dict[str, dict]):
-        """
-        Use 'content' field from value for embedding, use key as id.
-        If embedding_func is None, use 'embedding' field from value
-        """
-        raise NotImplementedError
-    
-    
+
 @dataclass 
 class BaseKVStorage(Generic[T], StorageNameSpace, ABC):
     embedding_func: EmbeddingFunc
@@ -91,6 +73,24 @@ class BaseKVStorage(Generic[T], StorageNameSpace, ABC):
     
     @abstractmethod
     async def upsert(self, data: Dict[str, T]):
+        raise NotImplementedError
+    
+
+@dataclass
+class BaseVectorStorage(StorageNameSpace, ABC):
+    embedding_func: EmbeddingFunc
+    meta_fields: set = field(default_factory=set) # entity or relationship
+
+    @abstractmethod
+    async def query(self, query: str, top_k: int) -> List[dict]:
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def upsert(self, data: dict[str, dict]):
+        """
+        Use 'content' field from value for embedding, use key as id.
+        If embedding_func is None, use 'embedding' field from value
+        """
         raise NotImplementedError
     
 

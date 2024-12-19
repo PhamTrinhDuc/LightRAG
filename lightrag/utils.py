@@ -190,6 +190,7 @@ class EmbeddingFunc:
             self._semaphone = asyncio.Semaphore(value=self.concurrent_limit)
         else:
             self._semaphone = UnlimitedSemaphore()
+            
     async def __call__(self, *args, **kawrgs) -> np.ndarray:
         async with self._semaphone:
             return await self.func(*args, **kawrgs)

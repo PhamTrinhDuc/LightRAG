@@ -8,22 +8,24 @@ from typing import Dict, Any
 from lightrag.utils import logger
 from lightrag.base import BaseVectorStorage
 from lightrag.schemas import EntitySchema, RelationSchema
-
+from lightrag.utils import EmbeddingFunc
 
 @dataclass
 class NanoVectorStorage(BaseVectorStorage):
+    working_dir: str
     cosine_threshold: float = 0.2
+    max_batch_size: int = 8
 
     def __post_init__(self):
         self._vector_storage_path = os.path.join(
             self.global_config['working_dir'], f"vdb_{self.namespace}.db"
         )
-        self._max_batch_size = self.global_config.get('max_batch_size', 8)
+        self._max_batch_size = self.max_batch_size or 8
         self._client = NanoVectorDB(
             embedding_dim=self.embedding_func.embedding_dim, 
             storage_file=self._vector_storage_path
         )
-        self.cosine_threshold = self.global_config.get('cosine_threshold', self.cosine_threshold)
+        self.cosine_threshold = self.cosine_threshold or 0.2
 
     async def upsert(self, data: Dict[str, EntitySchema | RelationSchema]):
         logger.info(f"Inserting {len(data)} vectors to {self.namespace}")
@@ -42,23 +44,41 @@ class NanoVectorStorage(BaseVectorStorage):
         batches = [contents[i: i + self._max_batch_size]
                         for i in range(0, len(data), self._max_batch_size)]
         
-        embeddings_task = [self.embedding_func(batch) for batch in batches]
-        embedding_list = []
-        for task in tqdm_async(
-            asyncio.as_completed(embeddings_task),
-            total=len(embeddings_task),
-            desc = "Genrerating embeddings",
+        async def wrapped_task(batch: list):
+            result = self.embedding_func(batch)
+            progess_bar.update(n=1)
+            return result
+        
+        embedding_tasks = [wrapped_task(batch) for batch in batches] # no run
+        progess_bar = tqdm_async(
+            total=len(embedding_tasks),
+            desc="Generating vector embeddings",
             unit="batch"
-        ):
-            embedding_list.append(await task)
-        embeddings = np.concatenate(embedding_list)
-        for idx, value in enumerate(embedding_list):
-            value['__vector__'] = embeddings[idx]
-        results = await self._client.upsert(datas=list_data)
+        )
+
+        embedding_lists = asyncio.gather(*embedding_tasks) # run tasks
+
+        embeddings = np.concatenate(embedding_lists)
+        if len(embedding_lists) == len(list_data):
+            for idx, data in enumerate(list_data):
+                data["__vector__"] = embeddings[idx]
+            results = self._client.upsert(datas=list_data)
+            # return results
+        else:
+            # sometimes the embedding is not returned correctly. just log it.
+            logger.error(
+                f"embedding is not 1-1 with data, {len(embeddings)} != {len(list_data)}"
+            )
+
+    async def query(self, query: str, top_k: int = 5) -> list[dict]:
+        embedding_vector = self.embedding_func([query])[0]
+        results = self._client.query(query=embedding_vector,
+                                     top_k=top_k,
+                                     better_than_threshold=self.cosine_threshold)
+        results = [
+            {**dp, "id": dp["__id__"], "distance": dp["__metrics__"] } for dp in results
+        ]
         return results
-    
-    async def query():
-        pass
 
     async def delete_entity():
         pass
@@ -67,4 +87,4 @@ class NanoVectorStorage(BaseVectorStorage):
         pass
 
     def index_done_callback(self):
-        pass
+        self._client.save()
