@@ -3,8 +3,9 @@ import os
 import networkx as nx
 from dataclasses import dataclass
 from typing import List, Union, Tuple
-from lightrag.utils import logger
 from lightrag.base import BaseGraphStorage
+from lightrag.utils import logger
+
 
 @dataclass
 class NetworkXStorage(BaseGraphStorage):
@@ -98,4 +99,3 @@ class NetworkXStorage(BaseGraphStorage):
             logger.info(f"Edge between {src_node_id} and {tgt_node_id} deleted from the graph.")
         else:
             logger.warning(f"Edge between {src_node_id} and {tgt_node_id} not found in the graph for deletion.")
-    

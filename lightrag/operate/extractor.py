@@ -120,7 +120,7 @@ async def _merge_nodes_then_upsert(
     entity_name: str,
     list_entity: List[NodeSchema],
     knowledge_graph_inst: BaseGraphStorage,
-    global_config: dict
+    config: dict
 ) -> NodeSchema:
     """
     Get current node from graph based on the specific entity_name
@@ -156,7 +156,9 @@ async def _merge_nodes_then_upsert(
     )[0][0]
     entity_desc: str = GRAPH_FIELD_SEP.join(set([dp['entity_dsc'] for dp in list_entity] + already_entity_descs))
     entity_id: str = GRAPH_FIELD_SEP.join(set([dp['entity_source_id'] for dp in list_entity] + already_entity_ids))
-    entity_desc_summary: str = await _handle_entity_relation_summary()
+    entity_desc_summary: str = await _handle_entity_relation_summary(entity_or_relation_name=entity_name,
+                                                                     description=entity_desc,
+                                                                     global_config=config)
 
     # update node
     node_data = dict(
@@ -377,7 +379,7 @@ async def extract_entities(
         iterable=asyncio.as_completed(
             _merge_nodes_then_upsert(entity_name=k, list_entity=v, 
                                      knowledge_graph_inst=knowledge_graph_inst, 
-                                     global_config=global_config) # merge nodes after upsert nodes to graph
+                                     config=global_config) # merge nodes after upsert nodes to graph
             for k, v in maybe_nodes
         ),
         desc="Inserting entities",
@@ -409,13 +411,13 @@ async def extract_entities(
     
     if not len(all_relations_data):
         logger.warning(
-            "Didn't extract relationships, mayby your LLM is not working"
+            "Didn't extract relationships, maybe your LLM is not working"
         )
         return None
 
     # store entities and relationships to vector database ======================================
     if entity_vdb is not None: # for entity
-        data_for_vdb: EntitySchema = {
+        data_for_vdb: dict[str, EntitySchema] = {
             compute_mdhash_id(content=dp['entity_name'], prefix="ent-"): {
                 "entity_name": dp['entity_name'],
                 "content": dp['entity_name'] + dp['entity_desc']
@@ -425,7 +427,7 @@ async def extract_entities(
         await entity_vdb.upsert(data=data_for_vdb)
 
     if relationship_vdb is not None: # for relationship
-        data_for_vdb: RelationSchema = {
+        data_for_vdb: dict[str, RelationSchema] = {
             compute_mdhash_id(content=dp['target_node'] + dp['source_node'], prefix="rel-"): {
                 "content": dp['edge_keyword'] + dp['source_node'] + dp['target_node'] + dp['edge_desc'],
                 "source_node": dp['source_node'],
