@@ -104,6 +104,10 @@ class BaseGraphStorage(StorageNameSpace, ABC):
         raise NotImplementedError
     
     @abstractmethod
+    async def get_all_nodes(self) -> list:
+        raise NotImplementedError
+
+    @abstractmethod
     async def has_edge(self, src_node_id: str, tgt_node_id: str) -> bool:
         """Check if edge exists from src_node and tgt_node"""
         raise NotImplementedError
@@ -131,6 +135,10 @@ class BaseGraphStorage(StorageNameSpace, ABC):
     @abstractmethod
     async def get_edge(self, src_node_id: str, tgt_node_id: str)-> Union[dict, None]:
         """Get edge from graph through src_node_id and tgt_node_id"""
+        raise NotImplementedError
+    
+    @abstractmethod
+    async def get_all_edges(self) -> list:
         raise NotImplementedError
     
     @abstractmethod

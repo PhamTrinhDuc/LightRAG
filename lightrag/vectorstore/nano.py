@@ -8,11 +8,11 @@ from typing import Dict, Any
 from lightrag.utils import logger
 from lightrag.base import BaseVectorStorage
 from lightrag.schemas import EntitySchema, RelationSchema
-from lightrag.utils import EmbeddingFunc
+from lightrag.utils import compute_mdhash_id
 
 @dataclass
 class NanoVectorStorage(BaseVectorStorage):
-    working_dir: str
+    # working_dir: str
     cosine_threshold: float = 0.2
     max_batch_size: int = 8
 
@@ -79,12 +79,32 @@ class NanoVectorStorage(BaseVectorStorage):
             {**dp, "id": dp["__id__"], "distance": dp["__metrics__"] } for dp in results
         ]
         return results
+    
+    @property
+    def client_storage(self):
+        return getattr(self._client, "NanoVectorDB__storage")
+    
+    async def delete_entity(self, entity_name: str):
+        try:
+            id_entity = [compute_mdhash_id(content=entity_name, prefix="ent-")]
+            if self._client.get(ids=id_entity):
+                self._client.delete(ids=id_entity)
+                logger.info(f"Entity {entity_name} have been deleted.")
+            else:
+                logger.info(f"No entity found with name {entity_name}.")
+        except Exception as e:
+            logger.error(f"Error while deleting entity {entity_name}: {e}")
 
-    async def delete_entity():
-        pass
-
-    async def delete_relation():
-        pass
+    async def delete_relation(self, src_entity: str, tgt_entity: str):
+        try:
+            relation_id = [compute_mdhash_id(content=src_entity + tgt_entity, prefix="rel-")]
+            if self._client.get(ids=relation_id):
+                self._client.delete(ids=relation_id)
+                logger.info(f"Relation has src_entity: {src_entity} and tgt_entity: {tgt_entity} have been deleted.")
+            else:
+                logger.info(f"No relation found with src_entity: {src_entity} and tgt_entity: {tgt_entity}")
+        except Exception as e:
+            logger.error(f"Error while deleting relation with src_entity: {src_entity} and tgt_entity: {tgt_entity}")
 
     def index_done_callback(self):
         self._client.save()

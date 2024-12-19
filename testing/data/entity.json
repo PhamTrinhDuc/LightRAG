@@ -1,0 +1,98 @@
+[
+    {
+        "node_id": "Eren",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Eren Yeager l\u00e0 nh\u00e2n v\u1eadt ch\u00ednh, c\u00f3 kh\u1ea3 n\u0103ng bi\u1ebfn th\u00e0nh Titan",
+            "entity_source_id": "1"
+        }
+    },
+    {
+        "node_id": "Mikasa",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Mikasa l\u00e0 b\u1ea1n c\u1ee7a Eren v\u00e0 Armin, c\u1eadu \u0111\u01b0\u1ee3c nh\u1eadn nu\u00f4i b\u1eddi gia \u0111\u00ecnh c\u1ee7a Eren",
+            "entity_source_id": "2"
+        }
+    },
+    {
+        "node_id": "Armin",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Armin l\u00e0 m\u1ed9t chi\u1ebfn l\u01b0\u1ee3c gia t\u00e0i n\u0103ng, b\u1ea1n th\u00e2n c\u1ee7a Eren v\u00e0 Mikasa",
+            "entity_id": "3"
+        }
+    },
+    {
+        "node_id": "Levi",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Levi l\u00e0 \u0111\u1ed9i tr\u01b0\u1edfng c\u1ee7a \u0110\u1ed9i Trinh S\u00e1t, \u0111\u01b0\u1ee3c m\u1ec7nh danh l\u00e0 ng\u01b0\u1eddi l\u00ednh m\u1ea1nh nh\u1ea5t c\u1ee7a nh\u00e2n lo\u1ea1i",
+            "entity_source_id": "4"
+        }
+    },
+    {
+        "node_id": "Hange",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Hange Zoe l\u00e0 m\u1ed9t nh\u00e0 khoa h\u1ecdc thi\u00ean t\u00e0i, \u0111\u1ed9i tr\u01b0\u1edfng c\u1ee7a \u0110\u1ed9i \u0110i\u1ec1u tra, c\u00f3 ni\u1ec1m \u0111am m\u00ea m\u00e3nh li\u1ec7t v\u1edbi Titan.",
+            "entity_source_id": "5"
+        }
+    },
+    {
+        "node_id": "Erwin",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Erwin Smith l\u00e0 ch\u1ec9 huy \u0111\u1eddi th\u1ee9 13 c\u1ee7a Qu\u00e2n \u0111o\u00e0n Trinh s\u00e1t, m\u1ed9t ng\u01b0\u1eddi l\u00e3nh \u0111\u1ea1o t\u00e0i ba, th\u00f4ng minh v\u00e0 c\u00f3 t\u1ea7m nh\u00ecn xa tr\u00f4ng r\u1ed9ng. \n                            \u00d4ng l\u00e0 ng\u01b0\u1eddi \u0111\u00e3 d\u1eabn d\u1eaft Qu\u00e2n \u0111o\u00e0n Trinh s\u00e1t \u0111\u1ea1t \u0111\u01b0\u1ee3c nhi\u1ec1u th\u00e0nh c\u00f4ng trong cu\u1ed9c chi\u1ebfn ch\u1ed1ng l\u1ea1i Titan.",
+            "entity_source_id": "6"
+        }
+    },
+    {
+        "node_id": "Bertholdt",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Bertholdt Hoover l\u00e0 m\u1ed9t trong nh\u1eefng ng\u01b0\u1eddi l\u00ednh tinh nhu\u1ec7 c\u1ee7a Marley, \u0111\u1ed3ng th\u1eddi c\u0169ng l\u00e0 ng\u01b0\u1eddi th\u1eeba k\u1ebf Titan Kh\u1ed5ng L\u1ed3. Anh ta c\u00f3 t\u00ednh c\u00e1ch nh\u00fat nh\u00e1t, hi\u1ec1n l\u00e0nh v\u00e0 th\u01b0\u1eddng xuy\u00ean b\u1ecb Reiner v\u00e0 Annie t\u00e1c \u0111\u1ed9ng.",
+            "entity_source_id": "16"
+        }
+    },
+    {
+        "node_id": "Reiner",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Reiner Braun l\u00e0 m\u1ed9t trong nh\u1eefng ng\u01b0\u1eddi l\u00ednh tinh nhu\u1ec7 c\u1ee7a Marley, \u0111\u1ed3ng th\u1eddi c\u0169ng l\u00e0 ng\u01b0\u1eddi th\u1eeba k\u1ebf Titan Thi\u1ebft Gi\u00e1p. Anh ta lu\u00f4n c\u1ea3m th\u1ea5y t\u1ed9i l\u1ed7i v\u00ec nh\u1eefng h\u00e0nh \u0111\u1ed9ng c\u1ee7a m\u00ecnh.",
+            "entity_source_id": "11"
+        }
+    },
+    {
+        "node_id": "Annie",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Annie Leonhart l\u00e0 m\u1ed9t trong nh\u1eefng ng\u01b0\u1eddi l\u00ednh tinh nhu\u1ec7 c\u1ee7a Marley, \u0111\u1ed3ng th\u1eddi c\u0169ng l\u00e0 ng\u01b0\u1eddi th\u1eeba k\u1ebf Titan N\u1eef. C\u00f4 c\u00f3 t\u00ednh c\u00e1ch l\u1ea1nh l\u00f9ng, \u00edt n\u00f3i v\u00e0 lu\u00f4n \u0111\u1eb7t nhi\u1ec7m v\u1ee5 l\u00ean h\u00e0ng \u0111\u1ea7u.",
+            "entity_source_id": "12"
+        }
+    },
+    {
+        "node_id": "Jean",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Jean Kirschtein l\u00e0 m\u1ed9t th\u00e0nh vi\u00ean c\u1ee7a \u0110\u1ed9i Trinh s\u00e1t, ban \u0111\u1ea7u c\u00f3 \u01b0\u1edbc m\u01a1 tr\u1edf th\u00e0nh m\u1ed9t s\u0129 quan. Anh ta c\u00f3 t\u00ednh c\u00e1ch t\u1ef1 cao, ki\u00eau ng\u1ea1o nh\u01b0ng l\u1ea1i r\u1ea5t trung th\u00e0nh v\u1edbi b\u1ea1n b\u00e8. Jean lu\u00f4n c\u1ed1 g\u1eafng th\u1ec3 hi\u1ec7n b\u1ea3n th\u00e2n v\u00e0 ch\u1ee9ng t\u1ecf kh\u1ea3 n\u0103ng c\u1ee7a m\u00ecnh.",
+            "entity_source_id": "20"
+        }
+    },
+    {
+        "node_id": "Connie",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Connie Springer l\u00e0 m\u1ed9t th\u00e0nh vi\u00ean c\u1ee7a \u0110\u1ed9i Trinh s\u00e1t, c\u00f3 t\u00ednh c\u00e1ch vui v\u1ebb, ho\u1ea1t b\u00e1t v\u00e0 th\u01b0\u1eddng xuy\u00ean tr\u00eau ch\u1ecdc b\u1ea1n b\u00e8. D\u00f9 c\u00f3 v\u1ebb ngo\u00e0i h\u00e0i h\u01b0\u1edbc nh\u01b0ng Connie r\u1ea5t d\u0169ng c\u1ea3m v\u00e0 s\u1eb5n s\u00e0ng hy sinh v\u00ec b\u1ea1n b\u00e8.",
+            "entity_source_id": "21"
+        }
+    },
+    {
+        "node_id": "Sasha",
+        "node_data": {
+            "entity_type": "person",
+            "entity_desc": "Sasha Braus l\u00e0 m\u1ed9t th\u00e0nh vi\u00ean c\u1ee7a \u0110\u1ed9i Trinh s\u00e1t, n\u1ed5i ti\u1ebfng v\u1edbi t\u00ecnh y\u00eau d\u00e0nh cho \u0111\u1ed3 \u0103n. C\u00f4 c\u00f3 xu\u1ea5t th\u00e2n t\u1eeb m\u1ed9t ng\u00f4i l\u00e0ng nh\u1ecf v\u00e0 lu\u00f4n mang theo b\u00ean m\u00ecnh m\u1ed9t con dao \u0111\u1ec3 s\u0103n b\u1eafn. Sasha l\u00e0 m\u1ed9t ng\u01b0\u1eddi b\u1ea1n t\u1ed1t, lu\u00f4n quan t\u00e2m v\u00e0 chia s\u1ebb v\u1edbi m\u1ecdi ng\u01b0\u1eddi.",
+            "entity_source_id": "22"
+        }
+    }
+]

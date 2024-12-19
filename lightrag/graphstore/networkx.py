@@ -34,11 +34,11 @@ class NetworkXStorage(BaseGraphStorage):
         logger.info(f"Writing graph with {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
         nx.write_graphml(G, file_name)
     
-    async def has_nodes(self, node_id: str) -> bool:
+    async def has_node(self, node_id: str) -> bool:
         """Check if node exsits from node_id"""
         return self._graph.has_node(n=node_id)
     
-    async def get_all_node(self) -> list:
+    async def get_all_nodes(self) -> list:
         """Get all nodes from graph"""
         return self._graph.nodes
     

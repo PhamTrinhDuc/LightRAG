@@ -1,42 +1,205 @@
 <?xml version='1.0' encoding='utf-8'?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="edge_source_id" attr.type="string"/>
-<key id="d5" for="edge" attr.name="edge_weight" attr.type="string"/>
-<key id="d4" for="edge" attr.name="edge_keyword" attr.type="string"/>
-<key id="d3" for="edge" attr.name="edge_desc" attr.type="string"/>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d8" for="edge" attr.name="entity_source_id" attr.type="string"/>
+<key id="d7" for="edge" attr.name="edge_source_id" attr.type="string"/>
+<key id="d6" for="edge" attr.name="edge_weight" attr.type="string"/>
+<key id="d5" for="edge" attr.name="edge_keyword" attr.type="string"/>
+<key id="d4" for="edge" attr.name="edge_desc" attr.type="string"/>
+<key id="d3" for="node" attr.name="entity_id" attr.type="string"/>
 <key id="d2" for="node" attr.name="entity_source_id" attr.type="string"/>
 <key id="d1" for="node" attr.name="entity_desc" attr.type="string"/>
 <key id="d0" for="node" attr.name="entity_type" attr.type="string"/>
 <graph edgedefault="undirected"><node id="Eren">
   <data key="d0">person</data>
-  <data key="d1">Eren là bạn của Armin và Mikasa, cậu luôn có ước mơ được tự do</data>
+  <data key="d1">Eren Yeager là nhân vật chính, có khả năng biến thành Titan</data>
   <data key="d2">1</data>
 </node>
 <node id="Mikasa">
   <data key="d0">person</data>
   <data key="d1">Mikasa là bạn của Eren và Armin, cậu được nhận nuôi bời gia đình của Eren</data>
-  <data key="d2">1</data>
+  <data key="d2">2</data>
 </node>
 <node id="Armin">
   <data key="d0">person</data>
-  <data key="d1">Armin là bạn của Eren và Mikasa, cậu là người tuy nhút nhát nhưng lại rất thông minh</data>
-  <data key="d2">1</data>
+  <data key="d1">Armin là một chiến lược gia tài năng, bạn thân của Eren và Mikasa</data>
+  <data key="d3">3</data>
+</node>
+<node id="Levi">
+  <data key="d0">person</data>
+  <data key="d1">Levi là đội trưởng của Đội Trinh Sát, được mệnh danh là người lính mạnh nhất của nhân loại</data>
+  <data key="d2">4</data>
+</node>
+<node id="Hange">
+  <data key="d0">person</data>
+  <data key="d1">Hange Zoe là một nhà khoa học thiên tài, đội trưởng của Đội Điều tra, có niềm đam mê mãnh liệt với Titan.</data>
+  <data key="d2">5</data>
+</node>
+<node id="Erwin">
+  <data key="d0">person</data>
+  <data key="d1">Erwin Smith là chỉ huy đời thứ 13 của Quân đoàn Trinh sát, một người lãnh đạo tài ba, thông minh và có tầm nhìn xa trông rộng. 
+                            Ông là người đã dẫn dắt Quân đoàn Trinh sát đạt được nhiều thành công trong cuộc chiến chống lại Titan.</data>
+  <data key="d2">6</data>
+</node>
+<node id="Bertholdt">
+  <data key="d0">person</data>
+  <data key="d1">Bertholdt Hoover là một trong những người lính tinh nhuệ của Marley, đồng thời cũng là người thừa kế Titan Khổng Lồ. Anh ta có tính cách nhút nhát, hiền lành và thường xuyên bị Reiner và Annie tác động.</data>
+  <data key="d2">16</data>
+</node>
+<node id="Reiner">
+  <data key="d0">person</data>
+  <data key="d1">Reiner Braun là một trong những người lính tinh nhuệ của Marley, đồng thời cũng là người thừa kế Titan Thiết Giáp. Anh ta luôn cảm thấy tội lỗi vì những hành động của mình.</data>
+  <data key="d2">11</data>
+</node>
+<node id="Annie">
+  <data key="d0">person</data>
+  <data key="d1">Annie Leonhart là một trong những người lính tinh nhuệ của Marley, đồng thời cũng là người thừa kế Titan Nữ. Cô có tính cách lạnh lùng, ít nói và luôn đặt nhiệm vụ lên hàng đầu.</data>
+  <data key="d2">12</data>
+</node>
+<node id="Jean">
+  <data key="d0">person</data>
+  <data key="d1">Jean Kirschtein là một thành viên của Đội Trinh sát, ban đầu có ước mơ trở thành một sĩ quan. Anh ta có tính cách tự cao, kiêu ngạo nhưng lại rất trung thành với bạn bè. Jean luôn cố gắng thể hiện bản thân và chứng tỏ khả năng của mình.</data>
+  <data key="d2">20</data>
+</node>
+<node id="Connie">
+  <data key="d0">person</data>
+  <data key="d1">Connie Springer là một thành viên của Đội Trinh sát, có tính cách vui vẻ, hoạt bát và thường xuyên trêu chọc bạn bè. Dù có vẻ ngoài hài hước nhưng Connie rất dũng cảm và sẵn sàng hy sinh vì bạn bè.</data>
+  <data key="d2">21</data>
+</node>
+<node id="Sasha">
+  <data key="d0">person</data>
+  <data key="d1">Sasha Braus là một thành viên của Đội Trinh sát, nổi tiếng với tình yêu dành cho đồ ăn. Cô có xuất thân từ một ngôi làng nhỏ và luôn mang theo bên mình một con dao để săn bắn. Sasha là một người bạn tốt, luôn quan tâm và chia sẻ với mọi người.</data>
+  <data key="d2">22</data>
 </node>
 <edge source="Eren" target="Mikasa">
-  <data key="d3">Eren là bạn của Mikasa</data>
-  <data key="d4">friend</data>
-  <data key="d5">10</data>
-  <data key="d6">1</data>
+  <data key="d4">Eren là bạn thân thiết của Mikasa từ nhỏ</data>
+  <data key="d5">friend</data>
+  <data key="d6">10</data>
+  <data key="d7">1</data>
 </edge>
 <edge source="Eren" target="Armin">
-  <data key="d3">Eren là bạn của Armin</data>
-  <data key="d4">friend</data>
-  <data key="d5">9</data>
-  <data key="d6">1</data>
+  <data key="d4">Eren và Armin là bạn thân từ thời thơ ấu</data>
+  <data key="d5">friend</data>
+  <data key="d6">9</data>
+  <data key="d7">2</data>
+</edge>
+<edge source="Eren" target="Levi">
+  <data key="d4">Levi là chỉ huy trực tiếp và người hướng dẫn của Eren</data>
+  <data key="d5">commander</data>
+  <data key="d6">7</data>
+  <data key="d7">4</data>
+</edge>
+<edge source="Eren" target="Hange">
+  <data key="d4">Hange rất quan tâm đến khả năng của Eren và thường xuyên nghiên cứu về Titan</data>
+  <data key="d5">researcher</data>
+  <data key="d6">8</data>
+  <data key="d7">6</data>
+</edge>
+<edge source="Eren" target="Erwin">
+  <data key="d4">Erwin nhìn thấy tiềm năng lớn ở Eren và tin rằng cậu sẽ trở thành một người lãnh đạo vĩ đại.</data>
+  <data key="d5">mentor</data>
+  <data key="d6">7</data>
+  <data key="d7">9</data>
+</edge>
+<edge source="Eren" target="Reiner">
+  <data key="d4">Reiner và Eren đã từng là bạn bè, nhưng sau đó trở thành kẻ thù khi Reiner tiết lộ thân phận thật của mình.</data>
+  <data key="d5">enemy</data>
+  <data key="d6">7</data>
+  <data key="d8">15</data>
+</edge>
+<edge source="Eren" target="Jean">
+  <data key="d4">Jean và Eren thường xuyên đối đầu nhưng dần trở thành đồng đội tin cậy</data>
+  <data key="d5">comrade</data>
+  <data key="d6">6</data>
+  <data key="d7">5</data>
+</edge>
+<edge source="Eren" target="Connie">
+  <data key="d4">Connie là bạn đồng khóa với Eren trong Đội Trinh Sát</data>
+  <data key="d5">friend</data>
+  <data key="d6">5</data>
+  <data key="d7">7</data>
 </edge>
 <edge source="Mikasa" target="Armin">
-  <data key="d3">Armin là bạn của Mikasa</data>
-  <data key="d4">friend</data>
-  <data key="d5">9</data>
-  <data key="d6">1</data>
+  <data key="d4">Mikasa và Armin là bạn thân, cùng chiến đấu trong Đội Trinh Sát</data>
+  <data key="d5">friend</data>
+  <data key="d6">8</data>
+  <data key="d7">3</data>
+</edge>
+<edge source="Mikasa" target="Jean">
+  <data key="d4">Jean có cảm tình đặc biệt với Mikasa từ khi còn là học viên</data>
+  <data key="d5">admirer</data>
+  <data key="d6">7</data>
+  <data key="d7">6</data>
+</edge>
+<edge source="Mikasa" target="Sasha">
+  <data key="d4">Sasha và Mikasa là bạn thân nữ trong Đội Trinh Sát</data>
+  <data key="d5">friend</data>
+  <data key="d6">7</data>
+  <data key="d7">9</data>
+</edge>
+<edge source="Armin" target="Connie">
+  <data key="d4">Connie và Armin là bạn thân trong Đội Trinh Sát, thường hợp tác trong các nhiệm vụ</data>
+  <data key="d5">friend</data>
+  <data key="d6">6</data>
+  <data key="d7">8</data>
+</edge>
+<edge source="Armin" target="Sasha">
+  <data key="d4">Sasha và Armin là đồng đội thân thiết trong Đội Trinh Sát</data>
+  <data key="d5">friend</data>
+  <data key="d6">6</data>
+  <data key="d7">11</data>
+</edge>
+<edge source="Levi" target="Hange">
+  <data key="d4">Levi và Hange là đồng đội lâu năm, cùng làm việc trong Đội Trinh Sát</data>
+  <data key="d5">colleague</data>
+  <data key="d6">9</data>
+  <data key="d7">5</data>
+</edge>
+<edge source="Levi" target="Erwin">
+  <data key="d4">Erwin và Levi là đồng đội lâu năm, cùng nhau trải qua nhiều khó khăn và chiến đấu chống lại Titan.</data>
+  <data key="d5">colleague</data>
+  <data key="d6">9</data>
+  <data key="d7">7</data>
+</edge>
+<edge source="Hange" target="Erwin">
+  <data key="d4">Erwin rất tin tưởng vào tài năng của Hange và thường giao cho cô những nhiệm vụ quan trọng.</data>
+  <data key="d5">commander</data>
+  <data key="d6">8</data>
+  <data key="d7">8</data>
+</edge>
+<edge source="Bertholdt" target="Reiner">
+  <data key="d4">Reiner và Bertholdt là bạn thân từ nhỏ, cùng nhau thực hiện nhiệm vụ xâm nhập đảo Paradis.</data>
+  <data key="d5">friend</data>
+  <data key="d6">9</data>
+  <data key="d8">17</data>
+</edge>
+<edge source="Bertholdt" target="Annie">
+  <data key="d4">Annie và Bertholdt là đồng đội, cùng nhau thực hiện nhiệm vụ xâm nhập đảo Paradis. Annie thường tỏ ra lạnh lùng với Bertholdt.</data>
+  <data key="d5">colleague</data>
+  <data key="d6">8</data>
+  <data key="d8">18</data>
+</edge>
+<edge source="Reiner" target="Annie">
+  <data key="d4">Reiner và Annie là đồng đội thân thiết từ nhỏ, cùng nhau thực hiện nhiệm vụ xâm nhập đảo Paradis.</data>
+  <data key="d5">friend</data>
+  <data key="d6">9</data>
+  <data key="d8">14</data>
+</edge>
+<edge source="Jean" target="Connie">
+  <data key="d4">Jean và Connie là bạn thân từ thuở nhỏ, cùng nhau trải qua quá trình huấn luyện và chiến đấu. Mặc dù thường xuyên cãi nhau nhưng họ luôn có mặt để giúp đỡ nhau.</data>
+  <data key="d5">best_friend</data>
+  <data key="d6">9</data>
+  <data key="d8">23</data>
+</edge>
+<edge source="Jean" target="Sasha">
+  <data key="d4">Jean và Sasha thường xuyên trêu chọc nhau, nhưng họ cũng rất quan tâm đến nhau. Sasha thường nấu ăn cho Jean và các thành viên khác trong đội.</data>
+  <data key="d5">friend</data>
+  <data key="d6">8</data>
+  <data key="d8">24</data>
+</edge>
+<edge source="Connie" target="Sasha">
+  <data key="d4">Sasha và Connie là cặp bạn thân, thường tạo ra những tình huống hài hước</data>
+  <data key="d5">best_friend</data>
+  <data key="d6">9</data>
+  <data key="d8">25</data>
+  <data key="d7">10</data>
 </edge>
 </graph></graphml>

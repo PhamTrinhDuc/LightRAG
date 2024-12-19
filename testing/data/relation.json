@@ -1,0 +1,232 @@
+[
+    {
+        "src_node_id": "Eren",
+        "tgt_node_id": "Mikasa",
+        "edge_data": {
+            "edge_desc": "Eren l\u00e0 b\u1ea1n th\u00e2n thi\u1ebft c\u1ee7a Mikasa t\u1eeb nh\u1ecf",
+            "edge_keyword": "friend",
+            "edge_weight": "10",
+            "edge_source_id": "1"
+        }
+    },
+    {
+        "src_node_id": "Eren",
+        "tgt_node_id": "Armin",
+        "edge_data": {
+            "edge_desc": "Eren v\u00e0 Armin l\u00e0 b\u1ea1n th\u00e2n t\u1eeb th\u1eddi th\u01a1 \u1ea5u",
+            "edge_keyword": "friend",
+            "edge_weight": "9",
+            "edge_source_id": "2"
+        }
+    },
+    {
+        "src_node_id": "Mikasa",
+        "tgt_node_id": "Armin",
+        "edge_data": {
+            "edge_desc": "Mikasa v\u00e0 Armin l\u00e0 b\u1ea1n th\u00e2n, c\u00f9ng chi\u1ebfn \u0111\u1ea5u trong \u0110\u1ed9i Trinh S\u00e1t",
+            "edge_keyword": "friend",
+            "edge_weight": "8",
+            "edge_source_id": "3"
+        }
+    },
+    {
+        "src_node_id": "Levi",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Levi l\u00e0 ch\u1ec9 huy tr\u1ef1c ti\u1ebfp v\u00e0 ng\u01b0\u1eddi h\u01b0\u1edbng d\u1eabn c\u1ee7a Eren",
+            "edge_keyword": "commander",
+            "edge_weight": "7",
+            "edge_source_id": "4"
+        }
+    },
+    {
+        "src_node_id": "Levi",
+        "tgt_node_id": "Hange",
+        "edge_data": {
+            "edge_desc": "Levi v\u00e0 Hange l\u00e0 \u0111\u1ed3ng \u0111\u1ed9i l\u00e2u n\u0103m, c\u00f9ng l\u00e0m vi\u1ec7c trong \u0110\u1ed9i Trinh S\u00e1t",
+            "edge_keyword": "colleague",
+            "edge_weight": "9",
+            "edge_source_id": "5"
+        }
+    },
+    {
+        "src_node_id": "Hange",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Hange r\u1ea5t quan t\u00e2m \u0111\u1ebfn kh\u1ea3 n\u0103ng c\u1ee7a Eren v\u00e0 th\u01b0\u1eddng xuy\u00ean nghi\u00ean c\u1ee9u v\u1ec1 Titan",
+            "edge_keyword": "researcher",
+            "edge_weight": "8",
+            "edge_source_id": "6"
+        }
+    },
+    {
+        "src_node_id": "Erwin",
+        "tgt_node_id": "Levi",
+        "edge_data": {
+            "edge_desc": "Erwin v\u00e0 Levi l\u00e0 \u0111\u1ed3ng \u0111\u1ed9i l\u00e2u n\u0103m, c\u00f9ng nhau tr\u1ea3i qua nhi\u1ec1u kh\u00f3 kh\u0103n v\u00e0 chi\u1ebfn \u0111\u1ea5u ch\u1ed1ng l\u1ea1i Titan.",
+            "edge_keyword": "colleague",
+            "edge_weight": "9",
+            "edge_source_id": "7"
+        }
+    },
+    {
+        "src_node_id": "Erwin",
+        "tgt_node_id": "Hange",
+        "edge_data": {
+            "edge_desc": "Erwin r\u1ea5t tin t\u01b0\u1edfng v\u00e0o t\u00e0i n\u0103ng c\u1ee7a Hange v\u00e0 th\u01b0\u1eddng giao cho c\u00f4 nh\u1eefng nhi\u1ec7m v\u1ee5 quan tr\u1ecdng.",
+            "edge_keyword": "commander",
+            "edge_weight": "8",
+            "edge_source_id": "8"
+        }
+    },
+    {
+        "src_node_id": "Erwin",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Erwin nh\u00ecn th\u1ea5y ti\u1ec1m n\u0103ng l\u1edbn \u1edf Eren v\u00e0 tin r\u1eb1ng c\u1eadu s\u1ebd tr\u1edf th\u00e0nh m\u1ed9t ng\u01b0\u1eddi l\u00e3nh \u0111\u1ea1o v\u0129 \u0111\u1ea1i.",
+            "edge_keyword": "mentor",
+            "edge_weight": "7",
+            "edge_source_id": "9"
+        }
+    },
+    {
+        "src_node_id": "Reiner",
+        "tgt_node_id": "Annie",
+        "edge_data": {
+            "edge_desc": "Reiner v\u00e0 Annie l\u00e0 \u0111\u1ed3ng \u0111\u1ed9i th\u00e2n thi\u1ebft t\u1eeb nh\u1ecf, c\u00f9ng nhau th\u1ef1c hi\u1ec7n nhi\u1ec7m v\u1ee5 x\u00e2m nh\u1eadp \u0111\u1ea3o Paradis.",
+            "edge_keyword": "friend",
+            "edge_weight": "9",
+            "entity_source_id": "14"
+        }
+    },
+    {
+        "src_node_id": "Reiner",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Reiner v\u00e0 Eren \u0111\u00e3 t\u1eebng l\u00e0 b\u1ea1n b\u00e8, nh\u01b0ng sau \u0111\u00f3 tr\u1edf th\u00e0nh k\u1ebb th\u00f9 khi Reiner ti\u1ebft l\u1ed9 th\u00e2n ph\u1eadn th\u1eadt c\u1ee7a m\u00ecnh.",
+            "edge_keyword": "enemy",
+            "edge_weight": "7",
+            "entity_source_id": "15"
+        }
+    },
+    {
+        "src_node_id": "Reiner",
+        "tgt_node_id": "Bertholdt",
+        "edge_data": {
+            "edge_desc": "Reiner v\u00e0 Bertholdt l\u00e0 b\u1ea1n th\u00e2n t\u1eeb nh\u1ecf, c\u00f9ng nhau th\u1ef1c hi\u1ec7n nhi\u1ec7m v\u1ee5 x\u00e2m nh\u1eadp \u0111\u1ea3o Paradis.",
+            "edge_keyword": "friend",
+            "edge_weight": "9",
+            "entity_source_id": "17"
+        }
+    },
+    {
+        "src_node_id": "Annie",
+        "tgt_node_id": "Bertholdt",
+        "edge_data": {
+            "edge_desc": "Annie v\u00e0 Bertholdt l\u00e0 \u0111\u1ed3ng \u0111\u1ed9i, c\u00f9ng nhau th\u1ef1c hi\u1ec7n nhi\u1ec7m v\u1ee5 x\u00e2m nh\u1eadp \u0111\u1ea3o Paradis. Annie th\u01b0\u1eddng t\u1ecf ra l\u1ea1nh l\u00f9ng v\u1edbi Bertholdt.",
+            "edge_keyword": "colleague",
+            "edge_weight": "8",
+            "entity_source_id": "18"
+        }
+    },
+    {
+        "src_node_id": "Jean",
+        "tgt_node_id": "Connie",
+        "edge_data": {
+            "edge_desc": "Jean v\u00e0 Connie l\u00e0 b\u1ea1n th\u00e2n t\u1eeb thu\u1edf nh\u1ecf, c\u00f9ng nhau tr\u1ea3i qua qu\u00e1 tr\u00ecnh hu\u1ea5n luy\u1ec7n v\u00e0 chi\u1ebfn \u0111\u1ea5u. M\u1eb7c d\u00f9 th\u01b0\u1eddng xuy\u00ean c\u00e3i nhau nh\u01b0ng h\u1ecd lu\u00f4n c\u00f3 m\u1eb7t \u0111\u1ec3 gi\u00fap \u0111\u1ee1 nhau.",
+            "edge_keyword": "best_friend",
+            "edge_weight": "9",
+            "entity_source_id": "23"
+        }
+    },
+    {
+        "src_node_id": "Jean",
+        "tgt_node_id": "Sasha",
+        "edge_data": {
+            "edge_desc": "Jean v\u00e0 Sasha th\u01b0\u1eddng xuy\u00ean tr\u00eau ch\u1ecdc nhau, nh\u01b0ng h\u1ecd c\u0169ng r\u1ea5t quan t\u00e2m \u0111\u1ebfn nhau. Sasha th\u01b0\u1eddng n\u1ea5u \u0103n cho Jean v\u00e0 c\u00e1c th\u00e0nh vi\u00ean kh\u00e1c trong \u0111\u1ed9i.",
+            "edge_keyword": "friend",
+            "edge_weight": "8",
+            "entity_source_id": "24"
+        }
+    },
+    {
+        "src_node_id": "Connie",
+        "tgt_node_id": "Sasha",
+        "edge_data": {
+            "edge_desc": "Connie v\u00e0 Sasha l\u00e0 b\u1ea1n th\u00e2n, c\u00f9ng nhau chia s\u1ebb s\u1edf th\u00edch \u0103n u\u1ed1ng v\u00e0 th\u01b0\u1eddng xuy\u00ean \u0111i s\u0103n c\u00f9ng nhau.",
+            "edge_keyword": "best_friend",
+            "edge_weight": "9",
+            "entity_source_id": "25"
+        }
+    },
+    {
+        "src_node_id": "Jean",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Jean v\u00e0 Eren th\u01b0\u1eddng xuy\u00ean \u0111\u1ed1i \u0111\u1ea7u nh\u01b0ng d\u1ea7n tr\u1edf th\u00e0nh \u0111\u1ed3ng \u0111\u1ed9i tin c\u1eady",
+            "edge_keyword": "comrade",
+            "edge_weight": "6",
+            "edge_source_id": "5"
+        }
+    },
+    {
+        "src_node_id": "Jean",
+        "tgt_node_id": "Mikasa",
+        "edge_data": {
+            "edge_desc": "Jean c\u00f3 c\u1ea3m t\u00ecnh \u0111\u1eb7c bi\u1ec7t v\u1edbi Mikasa t\u1eeb khi c\u00f2n l\u00e0 h\u1ecdc vi\u00ean",
+            "edge_keyword": "admirer",
+            "edge_weight": "7",
+            "edge_source_id": "6"
+        }
+    },
+    {
+        "src_node_id": "Connie",
+        "tgt_node_id": "Eren",
+        "edge_data": {
+            "edge_desc": "Connie l\u00e0 b\u1ea1n \u0111\u1ed3ng kh\u00f3a v\u1edbi Eren trong \u0110\u1ed9i Trinh S\u00e1t",
+            "edge_keyword": "friend",
+            "edge_weight": "5",
+            "edge_source_id": "7"
+        }
+    },
+    {
+        "src_node_id": "Connie",
+        "tgt_node_id": "Armin",
+        "edge_data": {
+            "edge_desc": "Connie v\u00e0 Armin l\u00e0 b\u1ea1n th\u00e2n trong \u0110\u1ed9i Trinh S\u00e1t, th\u01b0\u1eddng h\u1ee3p t\u00e1c trong c\u00e1c nhi\u1ec7m v\u1ee5",
+            "edge_keyword": "friend",
+            "edge_weight": "6",
+            "edge_source_id": "8"
+        }
+    },
+    {
+        "src_node_id": "Sasha",
+        "tgt_node_id": "Mikasa",
+        "edge_data": {
+            "edge_desc": "Sasha v\u00e0 Mikasa l\u00e0 b\u1ea1n th\u00e2n n\u1eef trong \u0110\u1ed9i Trinh S\u00e1t",
+            "edge_keyword": "friend",
+            "edge_weight": "7",
+            "edge_source_id": "9"
+        }
+    },
+    {
+        "src_node_id": "Sasha",
+        "tgt_node_id": "Connie",
+        "edge_data": {
+            "edge_desc": "Sasha v\u00e0 Connie l\u00e0 c\u1eb7p b\u1ea1n th\u00e2n, th\u01b0\u1eddng t\u1ea1o ra nh\u1eefng t\u00ecnh hu\u1ed1ng h\u00e0i h\u01b0\u1edbc",
+            "edge_keyword": "best_friend",
+            "edge_weight": "9",
+            "edge_source_id": "10"
+        }
+    },
+    {
+        "src_node_id": "Sasha",
+        "tgt_node_id": "Armin",
+        "edge_data": {
+            "edge_desc": "Sasha v\u00e0 Armin l\u00e0 \u0111\u1ed3ng \u0111\u1ed9i th\u00e2n thi\u1ebft trong \u0110\u1ed9i Trinh S\u00e1t",
+            "edge_keyword": "friend",
+            "edge_weight": "6",
+            "edge_source_id": "11"
+        }
+    }
+]
