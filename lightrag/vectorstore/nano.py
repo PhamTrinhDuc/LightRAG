@@ -110,5 +110,5 @@ class NanoVectorStorage(BaseVectorStorage):
         except Exception as e:
             logger.error(f"Error while deleting relation with src_entity: {src_entity} and tgt_entity: {tgt_entity}")
 
-    def index_done_callback(self):
+    async def index_done_callback(self):
         self._client.save()

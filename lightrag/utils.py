@@ -98,18 +98,16 @@ def encode_string_by_tiktoken(content: str, model_name: str = "gpt-4o-mini") -> 
 def chunking_by_token_size(content: str, 
                            max_token_size: int = 1024, 
                            overlap_token_size: int = 128, 
-                           tiktoken_model_name: str = "gpt-4o-mini"):
+                           tiktoken_model_name: str = "gpt-4o-mini") -> list[dict]:
     tokens = encode_string_by_tiktoken(content=content, model_name=tiktoken_model_name)
-    print("Tokens: ", tokens) # list numerical
     results = []
     for idx, start in enumerate(range(0, len(tokens), max_token_size - overlap_token_size)):
         chunk_content = decode_tokens_by_tiktoken(
             tokens=tokens[start: start + max_token_size],
             model_name=tiktoken_model_name
         )
-        print("Chunk content: ", chunk_content) # list string
         results.append({
-            "tokens": tokens, 
+            "tokens": min(max_token_size, len(tokens) - start), 
             "content": chunk_content.strip(),
             "chunk_order_index": idx
         })

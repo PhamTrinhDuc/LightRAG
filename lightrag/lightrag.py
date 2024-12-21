@@ -105,7 +105,7 @@ class LightRAG:
         try:
             if isinstance(data, str):
                 data = [data]
-            # 1. Lưu trữ toàn bộ văn bản trong data vào full_docs_kv - class: JsonKVStorage
+            # 1. Lưu trữ văn bản sau khi chunk vào full_docs_kv - class: JsonKVStorage
             new_docs = {
                 compute_mdhash_id(content=text.strip(), prefix="doc-"): {"content": text.strip()}
                 for text in data
@@ -128,7 +128,7 @@ class LightRAG:
                 desc="Chunking docs", 
                 unit="doc"):
                 chunks = {
-                    compute_mdhash_id(content=doc['content'], prefix="chunk-"): {
+                    compute_mdhash_id(content=dp['content'], prefix="chunk-"): {
                         **dp, "full_doc_id": doc_key
                     }
                     for dp in chunking_by_token_size(
@@ -162,8 +162,8 @@ class LightRAG:
                 return
             
             self.chunk_entity_relation_graph = maybe_new_kg # Temporarily do not use graph here
-            await self.full_docs_kv.upsert(data=new_docs)
-            await self.text_chunks_kv.upsert(data=inserting_chunks)
+            await self.full_docs_kv.upsert(data=new_docs) # save the entire input data(not chunks) into JsonKVStorage's instace 
+            await self.text_chunks_kv.upsert(data=inserting_chunks) # save the entire input data(chunked done) into JsonKVStorage's instace 
         finally:
             if update_storage:
                 self._insert_callback_done()

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Union, Generic, TypeVar, List, Dict, Tuple, Literal
+from typing import Union, Generic, TypeVar, List, Dict, Tuple, Literal, Optional
 from lightrag.utils import EmbeddingFunc
 from abc import ABC, abstractmethod
 
@@ -54,7 +54,7 @@ class StorageNameSpace:
 
 @dataclass 
 class BaseKVStorage(Generic[T], StorageNameSpace, ABC):
-    embedding_func: EmbeddingFunc
+    embedding_func: Optional[EmbeddingFunc] = None
 
     @abstractmethod
     async def all_keys(self) -> List[str]:
