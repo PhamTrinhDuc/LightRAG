@@ -22,9 +22,12 @@ class ConfigParams:
     )
 
     # directory
-    working_dir: str = field(
-        default_factory= lambda: f"./lightrag_cache_{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
-    )
+    # working_dir: str = field(
+    #     default_factory= lambda: f"./lightrag_cache_{datetime.now().strftime('%Y-%m-%d-%H:%M:%S')}"
+    # )
+
+    working_dir: str = "my_working"
+
 
     # text chunk 
     chunk_token_size: int = 1200

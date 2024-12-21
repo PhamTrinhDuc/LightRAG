@@ -20,6 +20,10 @@ class NanoVectorStorage(BaseVectorStorage):
         self._vector_storage_path = os.path.join(
             self.global_config['working_dir'], f"vdb_{self.namespace}.db"
         )
+
+        if not os.path.exists(self.global_config['working_dir']):
+            os.makedirs(self.global_config['working_dir'])
+        
         self._max_batch_size = self.max_batch_size or 8
         self._client = NanoVectorDB(
             embedding_dim=self.embedding_func.embedding_dim, 
@@ -45,7 +49,7 @@ class NanoVectorStorage(BaseVectorStorage):
                         for i in range(0, len(data), self._max_batch_size)]
         
         async def wrapped_task(batch: list):
-            result = self.embedding_func(batch)
+            result = await self.embedding_func(batch) # using await for async def 
             progess_bar.update(n=1)
             return result
         
@@ -56,14 +60,13 @@ class NanoVectorStorage(BaseVectorStorage):
             unit="batch"
         )
 
-        embedding_lists = asyncio.gather(*embedding_tasks) # run tasks
+        embedding_lists = await asyncio.gather(*embedding_tasks) # run tasks and using await for async def 
 
         embeddings = np.concatenate(embedding_lists)
-        if len(embedding_lists) == len(list_data):
+        if len(embeddings) == len(list_data):
             for idx, data in enumerate(list_data):
                 data["__vector__"] = embeddings[idx]
-            results = self._client.upsert(datas=list_data)
-            # return results
+            self._client.upsert(datas=list_data)
         else:
             # sometimes the embedding is not returned correctly. just log it.
             logger.error(
@@ -94,6 +97,7 @@ class NanoVectorStorage(BaseVectorStorage):
                 logger.info(f"No entity found with name {entity_name}.")
         except Exception as e:
             logger.error(f"Error while deleting entity {entity_name}: {e}")
+
 
     async def delete_relation(self, src_entity: str, tgt_entity: str):
         try:
